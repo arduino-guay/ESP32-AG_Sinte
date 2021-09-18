@@ -1,7 +1,7 @@
-# Sintetizador basado en ESP32
+# Sintetizador analógico, estilo de los 80 basado en ESP-32
 ### Descripción
 Sintetizador monofónico totálmente autónomo , inicialmente basado en el gran trabajo de Marcel-licence ([https://github.com/marcel-licence/esp32_basic_synth](https://github.com/marcel-licence/esp32_basic_synth)).
-El código ha sido refactorizado (todavía no esta la 100%) , separando los distintos elementos en clases C++ para facilitar su mantenimiento y expansión.
+El código ha sido refactorizado (todavía no esta al 100%) , separando los distintos elementos en clases C++ para facilitar su mantenimiento y expansión.
 Algunos elementos han sido modificados/cambiados, teniendo en cuenta que el objetivo buscado era un sintetizador autónomo, al estilo de los sintetizadores analógicos de los 80.
 
 ### Características
@@ -28,4 +28,5 @@ Aparte de tener instado en el IDE las librerías necesarias para la tarjeta ESP3
 - [ClickEncoder](https://github.com/0xPIT/encoder)
 - [Ucglib](https://github.com/olikraus/ucglib)
 
-
+### Fotos
+![Frontal ](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Frontal.jpg "Frontal ")
