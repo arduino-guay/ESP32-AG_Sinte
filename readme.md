@@ -28,5 +28,15 @@ Aparte de tener instado en el IDE las librerías necesarias para la tarjeta ESP3
 - [ClickEncoder](https://github.com/0xPIT/encoder)
 - [Ucglib](https://github.com/olikraus/ucglib)
 
+### Esquema
+Próximamente
+
+### Vídeos
+Próximamente
+
+
 ### Fotos
 ![Frontal ](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Frontal.jpg "Frontal ")
+![Trasera frontal](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Frontal-Bck.jpg "Trasera frontal")
+![Placa](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Placa.jpg "Placa")
+![Multiplexor](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-MultiplexorADC.jpg "Multiplexor")![Conjuto](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Abierto.jpg "Conjuto")
