@@ -64,15 +64,12 @@ Aparte de tener instado en el IDE las librerías necesarias para la tarjeta ESP3
 | ------------ | ------------ | ------------ | 
 |	35	|	Volumen	| VOL GRAL|
 
-### Etiquetas
-\#Esp32, \#Arduino, \#Sintetizador, \#Synthesizer, \#Música, #Music, \#Sonido, \#Sound
-
 ### Vídeos
 Próximamente
 
 
 ### Fotos
-![Frontal ](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Frontal.jpg "Frontal ")
-![Trasera frontal](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Frontal-Bck.jpg "Trasera frontal")
-![Placa](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Placa.jpg "Placa")
-![Multiplexor](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-MultiplexorADC.jpg "Multiplexor")![Conjuto](https://github.com/arduino-guay/AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Abierto.jpg "Conjuto")
+![Frontal ](https://github.com/arduino-guay/ESP32-AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Frontal.jpg "Frontal ")
+![Trasera frontal](https://github.com/arduino-guay/ESP32-AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Frontal-Bck.jpg "Trasera frontal")
+![Placa](https://github.com/arduino-guay/ESP32-AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Placa.jpg "Placa")
+![Multiplexor](https://github.com/arduino-guay/ESP32-AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-MultiplexorADC.jpg "Multiplexor")![Conjuto](https://github.com/arduino-guay/ESP32-AG_Sinte/blob/main/fotos/AG_Sinte-ESP32-Abierto.jpg "Conjuto")
