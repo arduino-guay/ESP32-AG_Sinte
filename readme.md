@@ -28,8 +28,42 @@ Aparte de tener instado en el IDE las librerías necesarias para la tarjeta ESP3
 - [ClickEncoder](https://github.com/0xPIT/encoder)
 - [Ucglib](https://github.com/olikraus/ucglib)
 
-### Esquema
-Próximamente
+### Componentes
+- ESP32 DOIT DEV KIT
+- LCD 2,4" ILI9341 320x240 pixels
+- 17 potenciómetros (1K ~ 20K)
+- Encoder rotatorio
+- Módulo muliplexor 16 canales (CD74HC4067)
+- Módulo DAC I2s (en mi caso un Max98357   con amplificador incluido de 3W)
+- Optoacoplador para entrada MIDI (en mi caso 4N28) 
+
+### Conexiones
+| ESP32 GPIO |  DESTINO | ELEMENTO  |
+| ------------ | ------------ | ------------ | 
+| 22 |S0 | MUX ADC |
+| 12 |S1 | |
+| 13 |S2 | |
+| 21 |S3 | |
+| 15 |ADC | |
+| ------------ | ------------ | ------------ | 
+| 5 | CS | TFT |
+| 4	| RESET	| |
+| 2	| DC | |
+| 23 | MOSI	| |
+| 18 | SCK | |
+| ------------ | ------------ | ------------ | 
+| 14 | EncBtn |	Encoder	|
+| 33 | EncA	| |
+| 32 | EncB	| |
+| ------------ | ------------ | ------------ | 
+| 26 | Din | I2S DAC |
+| 25 | Bclk | |
+| 27 | LCR | |
+| ------------ | ------------ | ------------ | 
+| 16 | RX2 | MIDI IN |
+| ------------ | ------------ | ------------ | 
+| 35 | Volumen | VOL GRAL|
+
 
 ### Vídeos
 Próximamente
