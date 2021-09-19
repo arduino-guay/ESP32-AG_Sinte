@@ -34,29 +34,22 @@ AG_Sintetizador El_Sinte;
 AG_ADC adc = AG_ADC(&El_Sinte);
 AG_Midi midi = AG_Midi(&El_Sinte);
 
+void Delay_Process(float *signal_l, float *signal_r);
+
 uint32_t inicio;
 uint32_t acum;
 
 void setup()
 {
-    /*
-     * this code runs once
-     */
-    Serial.begin(115200);
+    //Serial.begin(115200);
     delay(500);
+
     Menu_setup(&El_Sinte);
-    
     Delay_Init();
-
-    //Serial.printf("Initialize Synth Module\n");
     El_Sinte.Init();
-    //Serial.printf("Initialize I2S Module\n");
 
- 
     setup_i2s();
-    //Serial.printf("Initialize Midi Module\n");
-    
-    //Serial.printf("Turn off Wifi/Bluetooth\n");
+
     WiFi.mode(WIFI_OFF);
 
     /*
@@ -67,9 +60,6 @@ void setup()
 
     Serial.printf("Firmware started successfully\n");
     */
-
-    //Synth_NoteOn(0, 64, 1.0f);
-    //Synth_ModulationWheel(0,0.5 );
 
     xTaskCreatePinnedToCore(Core0Task, "Core0Task", 8000, NULL, 999, &Core0TaskHnd, 0);
 
@@ -93,6 +83,8 @@ void Core0TaskLoop()
 
     Menu_process();    
     //Serial.println(fl_sample*300);
+
+    midi.Process();
 }
 
 void Core0Task(void *parameter)
@@ -100,7 +92,6 @@ void Core0Task(void *parameter)
     while (true)
     {
         Core0TaskLoop();
-
         /* this seems necessary to trigger the watchdog */
         delay(1);
         yield();
@@ -124,32 +115,19 @@ void loop()
 
     loop_count++;
 
-    if (i2s_write_stereo_samples(&fl_sample, &fr_sample))
-    {
-        /* nothing for here */
-    }
-    inicio = micros();
+    i2s_write_stereo_samples(&fl_sample, &fr_sample);
+
+    //inicio = micros();
     El_Sinte.Process(&fl_sample, &fr_sample);
-    acum += micros()-inicio;
+    //acum += micros()-inicio;
 
     if ( loop_count == 10000 ) {
       //Serial.printf("Proceso %d ns\n", acum/10);
       loop_count = 0;
       acum = 0;
     }
-    /*
-     * process delay line
-     */
     Delay_Process(&fl_sample, &fr_sample);
 
-    /*
-     * Midi does not required to be checked after every processed sample
-     * - we divide our operation by 8
-     */
-    if (loop_count % 8 == 0)
-    {
-        midi.Process();
-    }
 }
 
 

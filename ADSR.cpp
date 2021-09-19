@@ -20,6 +20,7 @@
 //
 
 #include "ADSR.h"
+#include <Arduino.h>
 #include <math.h>
 
 
@@ -33,7 +34,39 @@ ADSR::ADSR(void) {
     setTargetRatioDR(0.0001);
 }
 
-ADSR::~ADSR(void) {
+float IRAM_ATTR ADSR::process()
+{
+    switch (state)
+    {
+    case env_idle:
+        break;
+    case env_attack:
+        output = attackBase + output * attackCoef;
+        if (output >= 1.0)
+        {
+            output = 1.0;
+            state = env_decay;
+        }
+        break;
+    case env_decay:
+        output = decayBase + output * decayCoef;
+        if (output <= sustainLevel)
+        {
+            output = sustainLevel;
+            state = env_sustain;
+        }
+        break;
+    case env_sustain:
+        break;
+    case env_release:
+        output = releaseBase + output * releaseCoef;
+        if (output <= 0.0)
+        {
+            output = 0.0;
+            state = env_idle;
+        }
+    }
+    return output;
 }
 
 void ADSR::setAttackRate(float rate) {

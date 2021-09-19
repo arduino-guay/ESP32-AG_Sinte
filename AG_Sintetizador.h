@@ -124,42 +124,6 @@ class AG_Sintetizador
 static uint32_t count = 0;
 static float outMono = 0;
 
-inline void AG_Sintetizador::Process(float *left, float *right)
-{
-    /* gerenate a noise signal */
-    float noise_signal = (random(1024) /512.0f - 1.0f) * soundNoiseLevel;
-
-    outMono = 0;
-    count += 1;
-    float valLFO = lfo.getSiguienteValor();
-
-    if (count % 100 == 0)
-    {
-        //float pitchVar = pitchBendValue * (1.0 - lfo.getSiguienteValor());
-        // pitchMultiplier = pow(2.0f, valLFO * 5 / 12.0f);
-        if ( coefLFOCutoff > 0 ) {
-            fistroGlobal.setCutOff(cutOffGen + (valLFO+1)/2.0 * coefLFOCutoff);
-            fistroGlobal.CalculateCoeff();
-        }
-    }
-
-    for (int i = 0; i < MAX_POLY_VOICE; i++) 
-    {
-        if ( !voces[i].estaLibre() ) 
-        {
-            voces[i].setModulacion(1 + valLFO * coefLFOFrec);
-            outMono += voces[i].Process(count, noise_signal, resoFiltVoz);
-        }
-    }
-
-    outMono = fistroGlobal.Process(outMono);   
-    outMono *= volumenGen;
-    outMono += outMono * coefLFOMod * valLFO;
-
-    *left = outMono;
-    *right = outMono;
-}
-
 
 #endif
 

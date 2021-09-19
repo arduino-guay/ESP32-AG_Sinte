@@ -28,6 +28,44 @@ AG_Voz::AG_Voz()
     numOsc = 0;
 }
 
+float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal, float fResonance)
+{
+    valor = noise_signal;
+    for (uint8_t i = 0; i < numOsc; i++)
+    {
+        valor += osc[i]->getSiguienteValor();
+    }
+
+    if (tics % TICS_ADSR_VOZ == 0)
+    {
+        adsr->process();
+        activa = adsr->isActive();
+        if (!activa)
+        {
+            for (uint8_t i = 0; i < numOsc; i++)
+            {
+                osc[i]->setEnUso(false);
+                osc[i] = nullptr;
+            }
+            numOsc = 0;
+        }
+        adsrF->process();
+    }
+
+    valor *= adsr->getValue() * velocidad;
+
+    if (tics % TICS_ADSR_FILTRO == 0)
+    {
+        fistro.setResonance(fResonance);
+        fistro.setCutOff(adsrF->getValue());
+        fistro.CalculateCoeff();
+    }
+
+    valor = fistro.Process(valor);
+    
+    return valor;
+}
+
 void AG_Voz::addOscilador(AG_Oscilador *_osc)
 {
     osc[numOsc++] = _osc;

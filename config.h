@@ -25,7 +25,7 @@
 #define RXD2 16 /* U2RRXD */
 #define TXD2 17
 
-#define SAMPLE_RATE 36000
+#define SAMPLE_RATE 44000
 #define SAMPLE_SIZE_16BIT
 
 #endif /* CONFIG_H_ */

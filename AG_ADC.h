@@ -33,7 +33,7 @@
 #define ADC_PIN 15
 #define ADC_VOLUMEN 35
 
-#define RETARDO_ACTIVACION 3
+#define RETARDO_ACTIVACION 1
 
 
 class AG_ADC {

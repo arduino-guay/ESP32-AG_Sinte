@@ -25,26 +25,26 @@
 class AG_WaveTable
 {
 public:
-   inline virtual float getValor(uint32_t i) {}
+   virtual IRAM_ATTR float getValor(uint32_t i) {}
 };
 
 class AG_WTSeno : public AG_WaveTable
 {
 public:
-   inline float getValor(uint32_t i) { return AG_Util::seno(i); }
+   float IRAM_ATTR getValor(uint32_t i) { return AG_Util::seno(i); }
 };
 
 class AG_WTLFR : public AG_WaveTable
 {
 public:
-   inline float getValor(uint32_t i) { return AG_Util::LFR(i); }
+   float IRAM_ATTR getValor(uint32_t i) { return AG_Util::LFR(i); }
 };
 
 class AG_WTSenoDiscreto : public AG_WaveTable
 {
 public:
    AG_WTSenoDiscreto() { AG_Util::setSaltosSenoDiscreto(3); }
-   inline void setSaltos(uint32_t _saltos)
+   void setSaltos(uint32_t _saltos)
    {
       if (_saltos < 2)
       {
@@ -54,27 +54,27 @@ public:
       AG_Util::setSaltosSenoDiscreto(_saltos);
    }
 
-   inline float getValor(uint32_t i) { return AG_Util::senoDiscreto(i); }
+   float IRAM_ATTR getValor(uint32_t i) { return AG_Util::senoDiscreto(i); }
 };
 
 class AG_WTSierra : public AG_WaveTable
 {
 public:
-   inline float getValor(uint32_t i) { return (2.0f * ((float)i) / ((float)WAVEFORM_CNT)) - 1.0f; }
+   float getValor(uint32_t i);
 };
 
 class AG_WTCuadrada : public AG_WaveTable
 {
 public:
-   inline float getValor(uint32_t i) { return (i > (WAVEFORM_CNT / 2)) ? 1 : -1; }
+   float getValor(uint32_t i);
 };
 
 class AG_WTPulso : public AG_WaveTable
 {
 public:
-   inline AG_WTPulso() { ciclo = 0.25; }
-   inline float getValor(uint32_t i) { return (i > (WAVEFORM_CNT * ciclo)) ? 1 : -1; }
-   inline void setCiclo(float _ciclo) { ciclo = _ciclo; }
+   AG_WTPulso() { ciclo = 0.25; }
+   float getValor(uint32_t i);
+   void setCiclo(float _ciclo) { ciclo = _ciclo; }
 
 private:
    float ciclo; // 1 -- 100
@@ -83,36 +83,21 @@ private:
 class AG_WTTriangular : public AG_WaveTable
 {
 public:
-   inline float getValor(uint32_t i) { return ((i > (WAVEFORM_CNT / 2)) ? (((4.0f * (float)i) / ((float)WAVEFORM_CNT)) - 1.0f) : (3.0f - ((4.0f * (float)i) / ((float)WAVEFORM_CNT)))) - 2.0f; }
+   float getValor(uint32_t i);
 };
 
 class AG_WTRuidoBlanco : public AG_WaveTable
 {
 public:
-   inline float getValor(uint32_t i) { return (random(1024) / 512.0f) - 1.0f; }
-};
-
-class AG_WTRuidoRosa : public AG_WaveTable
-{
-public:
-   inline float getValor(uint32_t i)
-   {
-      float tmp = (random(1024) / 512.0f) - 1.0f;
-      float res = (tmp + vAnt1 + vAnt2) / 3;
-      vAnt2 = vAnt1;
-      vAnt1 = tmp;
-      return res;
-   }
-
-private:
-   float vAnt1, vAnt2 = 0;
+   float getValor(uint32_t i);
 };
 
 class AG_WTOff : public AG_WaveTable
 {
 public:
-   inline float getValor(uint32_t i) { return 0; }
+   float getValor(uint32_t i);
 };
+
 
 
 #endif //AG_WAVETABLE_H

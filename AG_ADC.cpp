@@ -48,7 +48,6 @@ void AG_ADC::procesa (boolean refrescar) {
             sinte->setParam(i, valorFloat(valor));
             antValores[i] = valor;
         }
-        delay(RETARDO_ACTIVACION);
     }
 }
 

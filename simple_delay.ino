@@ -16,8 +16,8 @@
  */
 float *delayLine_l;
 float *delayLine_r;
-float delayToMix = 0.4;
-float delayFeedback = 0.1;
+float delayToMix = 0.0;
+float delayFeedback = 0.0;
 uint32_t delayLen = 11098;
 uint32_t delayIn = 0;
 uint32_t delayOut = 0;
@@ -46,7 +46,7 @@ void Delay_Reset(void)
     }
 }
 
-void Delay_Process(float *signal_l, float *signal_r)
+void IRAM_ATTR Delay_Process(float *signal_l, float *signal_r)
 {
     delayLine_l[delayIn] = *signal_l;
     delayLine_r[delayIn] = *signal_r;

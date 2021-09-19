@@ -85,17 +85,17 @@ namespace AG_Util
         }        
     }
 
-    float seno(uint32_t x)
+    float IRAM_ATTR seno(uint32_t x)
     {
         return _senos[x];
     }
 
-    float senoDiscreto(uint32_t x)
+    float IRAM_ATTR senoDiscreto(uint32_t x)
     {
         return _senoDiscreto[x];
     }
 
-    float LFR(uint32_t x)
+    float IRAM_ATTR LFR(uint32_t x)
     {
         return _lfr[x];
     }
