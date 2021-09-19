@@ -41,13 +41,14 @@ public:
     void setCutOff(float _cutOff) { _cutOff >= 1.0 ? cutOff = 0.99: cutOff = _cutOff; apagado = (cutOff < 0.00001 || resonance <= 0.5) ; }
     void setResonance(float _resonance) { resonance = _resonance; apagado = (cutOff < 0.00001 || resonance <= 0.5) ;}
     void setTipo(TipoFiltro _tipo) { tipo = _tipo; }
+    void debug(); 
 
 private:
     float cutOff;
     float resonance;
     float aNorm[2];
     float bNorm[3];
-    float w[3];
+    float w[2];
     uint32_t fSeno;
     uint32_t fCoseno;
     boolean apagado;

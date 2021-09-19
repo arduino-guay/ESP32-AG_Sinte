@@ -36,14 +36,11 @@ void AG_Filtro::Reset()
 {
     w[0] = 0.0f;
     w[1] = 0.0f;
-    w[2] = 0.0f;
 }
 
 void IRAM_ATTR AG_Filtro::CalculateCoeff()
 {
     float cosOmega, omega, sinOmega, alpha, a[3], b[3];
-
-    cutOff = cutOff * cutOff * cutOff;
 
     if (cutOff >= 1.0f)
     {
@@ -58,9 +55,6 @@ void IRAM_ATTR AG_Filtro::CalculateCoeff()
         omega = cutOff;
     }
 
-    /*
-     * use lookup here to get quicker results
-     */
     uint32_t tmp1 = (uint32_t)(fSeno * omega); 
     cosOmega = AG_Util::seno(WAVEFORM_I( tmp1 + fCoseno ));
     sinOmega = AG_Util::seno(WAVEFORM_I( tmp1 ));
@@ -109,3 +103,9 @@ float IRAM_ATTR AG_Filtro::Process(float const signal)
     w[1] = bNorm[2] * signal - aNorm[1] * out;
     return out;
 }
+
+void AG_Filtro::debug()
+{
+  Serial.printf("Apagado %s - Cutoff: %f - Reso: %f - aNorm: %f,%f - bNorm: %f,%f,%f - w: %f,%f\n", apagado? "Si":"No" , cutOff, resonance, aNorm[0], aNorm[1], bNorm[0], bNorm[1], bNorm[2], w[0], w[1]); 
+}
+

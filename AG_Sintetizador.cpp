@@ -247,16 +247,20 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
         incNotaOsc2 = ((uint8_t)(value * 10) - 5) * 12;
         break;
     case SYNTH_PARAM_MAIN_FILT_CUTOFF:
-        cutOffGen = value;
-        fistroGlobal.setCutOff(value);
+        cutOffGen = value * value * value;
+        fistroGlobal.setCutOff(value * value * value);
+        //Serial.printf("Cutoff %f\n", cutOffGen);
         fistroGlobal.CalculateCoeff();
+        //fistroGlobal.debug();
         break;
     case SYNTH_PARAM_MAIN_FILT_RESO:
         fistroGlobal.setResonance(0.5f + 10 * value * value * value);
         fistroGlobal.CalculateCoeff();
+        //Serial.printf("Resonancia %f\n", 0.5f + 10 * value * value * value);
+        //fistroGlobal.debug();
         break;
     case SYNTH_PARAM_VOICE_FILT_RESO:
-        resoFiltVoz = 0.5f + 10 * value * value * value; /* min q is 0.5 here */
+        resoFiltVoz = 0.5f + 10 * value * value * value; 
         break;
     case SYNTH_PARAM_VOICE_NOISE_LEVEL:
         soundNoiseLevel = value;
@@ -268,7 +272,7 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
         lfo.setFrecuencia(value * 5);
         break;
     case SYNTH_PARAM_MODULATION_OSC1:
-        resoFiltVoz = 0.5f + 10 * value * value * value; /* min q is 0.5 here */
+        resoFiltVoz = 0.5f + 10 * value * value * value; 
         break;
     case SYNTH_PARAM_VOLUMEN:
         volumenGen = pow(5, value - 1) - 0.2;
