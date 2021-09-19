@@ -38,32 +38,34 @@ Aparte de tener instado en el IDE las librerías necesarias para la tarjeta ESP3
 - Optoacoplador para entrada MIDI (en mi caso 4N28) 
 
 ### Conexiones
-| ESP32 GPIO |  DESTINO | ELEMENTO  |
+|  ESP32 GPIO |  DESTINO | ELEMENTO  |
 | ------------ | ------------ | ------------ | 
-| 22 |S0 | MUX ADC |
-| 12 |S1 | |
-| 13 |S2 | |
-| 21 |S3 | |
-| 15 |ADC | |
+|	22	|	S0	|	MUX ADC	|
+|	12	|	S1	|		|
+|	13	|	S2	|		|
+|	21	|	S3	|		|
+|	15	|	ADC	|		|
 | ------------ | ------------ | ------------ | 
-| 5 | CS | TFT |
-| 4	| RESET	| |
-| 2	| DC | |
-| 23 | MOSI	| |
-| 18 | SCK | |
+|	5	|	CS	|	TFT	|
+|	4	|	RESET	|		|
+|	2	|	DC	|		|
+|	23	|	MOSI	|		|
+|	18	|	SCK	|		|
 | ------------ | ------------ | ------------ | 
-| 14 | EncBtn |	Encoder	|
-| 33 | EncA	| |
-| 32 | EncB	| |
+|	14	|	EncBtn	|	Encoder	|
+|	33	|	EncA	|		|
+|	32	|	EncB	|		|
 | ------------ | ------------ | ------------ | 
-| 26 | Din | I2S DAC |
-| 25 | Bclk | |
-| 27 | LCR | |
+|	26	|	Din	|	I2S DAC	|
+|	25	|	Bclk	|		|
+|	27	|	LCR	|		|
 | ------------ | ------------ | ------------ | 
-| 16 | RX2 | MIDI IN |
+|	16	|	RX2	|	MIDI IN	|
 | ------------ | ------------ | ------------ | 
-| 35 | Volumen | VOL GRAL|
+|	35	|	Volumen	| VOL GRAL|
 
+### Etiquetas
+\#Esp32, \#Arduino, \#Sintetizador, \#Synthesizer, \#Música, #Music, \#Sonido, \#Sound
 
 ### Vídeos
 Próximamente
