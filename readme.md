@@ -1,4 +1,4 @@
-# Sintetizador analógico, estilo de los 80 basado en ESP-32
+# Sintetizador analógico, estilo de los 80 basado en ESP32
 ### Descripción
 Sintetizador monofónico totálmente autónomo , inicialmente basado en el gran trabajo de Marcel-licence ([https://github.com/marcel-licence/esp32_basic_synth](https://github.com/marcel-licence/esp32_basic_synth)).
 El código ha sido refactorizado (todavía no esta al 100%) , separando los distintos elementos en clases C++ para facilitar su mantenimiento y expansión.
