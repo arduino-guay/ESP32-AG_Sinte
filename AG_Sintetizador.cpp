@@ -71,7 +71,7 @@ void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
         if ( !voces[i].estaLibre() ) 
         {
             voces[i].setModulacion(1 + valLFO * coefLFOFrec);
-            outMono += voces[i].Process(count, noise_signal, resoFiltVoz);
+            outMono += voces[i].Process(count, noise_signal);
         }
     }
 
@@ -81,18 +81,6 @@ void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
 
     *left = outMono;
     *right = outMono;
-}
-
-AG_Oscilador *AG_Sintetizador::getFreeOsc()
-{
-    for (int i = 0; i < MAX_POLY_OSC; i++)
-    {
-        if (osciladores[i].estaLibre())
-        {
-            return &osciladores[i];
-        }
-    }
-    return NULL;
 }
 
 AG_Voz *AG_Sintetizador::getFreeVoice()
@@ -120,33 +108,19 @@ void AG_Sintetizador::Init()
 
 void AG_Sintetizador::NoteOn(uint8_t ch, uint8_t note, float vel)
 {
-    AG_Voz *voice = getFreeVoice();
-    boolean hayOsc = false;
     for (uint8_t y = 0; y < vocesUnison; y++)
     {
-        AG_Oscilador *osc = getFreeOsc();
-        if (osc != nullptr)
-        {
-            hayOsc = true;
-            osc->setNotaMidi(note, wfOsc1, 0, y * centsDetuneUnison);
-            voice->addOscilador(osc);
-            osc = getFreeOsc();
-            if (osc != nullptr)
-            {
-                // Movemos la octava entre -5 y +5
-                if (note + incNotaOsc2 < MIDI_NOTE_CNT)
-                {
-                    osc->setNotaMidi(note + incNotaOsc2, wfOsc2, 0, y * centsDetuneUnison);
-                    //osc->setNotaMidi(note, selectedWaveForm2, 0, centsOsc2);
-                    osc->setVolumen(volOsc2);
-                    voice->addOscilador(osc);
-                }
-            }
+        AG_Voz *voice = getFreeVoice();
+        if ( voice != nullptr ) {
+          voice->getOsc1()->setNotaMidi(note, wfOsc1, 0, y * centsDetuneUnison);
+          // Movemos la octava entre -5 y +5
+          if (note + incNotaOsc2 < MIDI_NOTE_CNT)
+          {
+              voice->getOsc2()->setNotaMidi(note + incNotaOsc2, wfOsc2, 0, y * centsDetuneUnison);
+              voice->getOsc2()->setVolumen(volOsc2);
+          }
+          voice->NoteOn(ch, note, 1.0, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltro);
         }
-    }
-    if (hayOsc)
-    {
-        voice->NoteOn(ch, note, 1.0, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltro);
     }
 }
 
@@ -270,9 +244,6 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
         break;
     case SYNTH_PARAM_LFO_RATE:
         lfo.setFrecuencia(value * 5);
-        break;
-    case SYNTH_PARAM_MODULATION_OSC1:
-        resoFiltVoz = 0.5f + 10 * value * value * value; 
         break;
     case SYNTH_PARAM_VOLUMEN:
         volumenGen = pow(5, value - 1) - 0.2;

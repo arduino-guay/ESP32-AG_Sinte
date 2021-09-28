@@ -47,6 +47,7 @@ public:
     void setTargetRatioA(float targetRatio);
     void setTargetRatioDR(float targetRatio);
     void reset(void);
+    void retrigger();
 
     enum envState
     {

@@ -137,3 +137,9 @@ void ADSR::reset()
     state = env_idle;
     output = 0.0;
 }
+
+void ADSR::retrigger()
+{
+    reset();
+    gate(true);
+}

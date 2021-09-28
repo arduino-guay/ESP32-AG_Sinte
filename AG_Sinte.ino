@@ -41,7 +41,7 @@ uint32_t acum;
 
 void setup()
 {
-    //Serial.begin(115200);
+    Serial.begin(115200);
     delay(500);
 
     Menu_setup(&El_Sinte);
@@ -83,8 +83,6 @@ void Core0TaskLoop()
 
     Menu_process();    
     //Serial.println(fl_sample*300);
-
-    midi.Process();
 }
 
 void Core0Task(void *parameter)
@@ -121,11 +119,10 @@ void loop()
     El_Sinte.Process(&fl_sample, &fr_sample);
     //acum += micros()-inicio;
 
-    if ( loop_count == 10000 ) {
-      //Serial.printf("Proceso %d ns\n", acum/10);
-      loop_count = 0;
-      acum = 0;
+    if ( loop_count % 8 == 0) {
+      midi.Process();
     }
+
     Delay_Process(&fl_sample, &fr_sample);
 
 }

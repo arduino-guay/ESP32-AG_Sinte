@@ -41,7 +41,7 @@
 #define SYNTH_PARAM_MAIN_FILT_CUTOFF 10
 #define SYNTH_PARAM_MAIN_FILT_RESO	11
 
-#define SYNTH_PARAM_MODULATION_OSC1	9
+#define SYNTH_PARAM_VOICE_FILT_RESO	9
 #define SYNTH_PARAM_NOISE_LEVEL	4
 #define SYNTH_PARAM_LFO_DEPTH	1
 #define SYNTH_PARAM_LFO_RATE	0
@@ -54,7 +54,6 @@
 #define SYNTH_PARAM_WAVEFORM_1    100
 #define SYNTH_PARAM_WAVEFORM_2		101
 
-#define SYNTH_PARAM_VOICE_FILT_RESO		99
 #define SYNTH_PARAM_VOICE_NOISE_LEVEL	4
 
 
@@ -113,10 +112,7 @@ class AG_Sintetizador
         float cutOffGen; 
         float soundNoiseLevel = 0.0f;
 
-        AG_Oscilador osciladores[MAX_POLY_OSC];
         AG_Voz voces[MAX_POLY_VOICE];
-        
-        AG_Oscilador* getFreeOsc();
         AG_Voz* getFreeVoice();
         float synth_Log(float value, float maxSeg);
 };

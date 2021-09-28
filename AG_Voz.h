@@ -35,16 +35,17 @@ public:
     void NoteOn(uint8_t canal, uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF, float fResonance, AG_Filtro::TipoFiltro tipo);
     inline void setModulacion(float _pitchMultiplier)
     {
-        for (uint8_t i = 0; i < numOsc; i++)
-        {
-            osc[i]->setModulacion(_pitchMultiplier);
-        }
+        osc1->setModulacion(_pitchMultiplier);
+        osc2->setModulacion(_pitchMultiplier);
     }
     void NoteOff(uint8_t canal, uint8_t nota);
-    float Process(uint32_t tics, float noise_signal, float fResonance);
-    void addOscilador(AG_Oscilador *_osc);
+    float Process(uint32_t tics, float noise_signal);
     float getValor() { return valor; }
     boolean estaLibre() { return !activa; }
+    uint8_t getNotaMidi() { return notaMidi; }
+    inline AG_Oscilador* getOsc1() { return osc1; }
+    inline AG_Oscilador* getOsc2() { return osc2; }
+    void redisparar() { adsr->retrigger(); adsrF->retrigger(); }
 
 private:
     float velocidad;
@@ -52,9 +53,9 @@ private:
     boolean activa;
     ADSR *adsr;
     ADSR *adsrF;
-    AG_Filtro fistro;
-    AG_Oscilador *osc[MAX_OSC_VOZ];
-    uint8_t numOsc;
+    AG_Filtro *fistro;
+    AG_Oscilador *osc1;
+    AG_Oscilador *osc2;
     float valor;
 };
 

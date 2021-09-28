@@ -25,30 +25,21 @@ AG_Voz::AG_Voz()
     valor = 0;
     adsr = new ADSR();
     adsrF = new ADSR();
-    numOsc = 0;
+    osc1 = new AG_Oscilador();
+    osc2 = new AG_Oscilador();
+    fistro = new AG_Filtro();
 }
 
-float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal, float fResonance)
+float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal)
 {
     valor = noise_signal;
-    for (uint8_t i = 0; i < numOsc; i++)
-    {
-        valor += osc[i]->getSiguienteValor();
-    }
+    valor += osc1->getSiguienteValor();
+    valor += osc2->getSiguienteValor();
 
     if (tics % TICS_ADSR_VOZ == 0)
     {
         adsr->process();
         activa = adsr->isActive();
-        if (!activa)
-        {
-            for (uint8_t i = 0; i < numOsc; i++)
-            {
-                osc[i]->setEnUso(false);
-                osc[i] = nullptr;
-            }
-            numOsc = 0;
-        }
         adsrF->process();
     }
 
@@ -56,22 +47,14 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal, float fResona
 
     if (tics % TICS_ADSR_FILTRO == 0)
     {
-        fistro.setResonance(fResonance);
-        fistro.setCutOff(adsrF->getValue());
-        fistro.CalculateCoeff();
+        fistro->setCutOff(adsrF->getValue());
+        fistro->CalculateCoeff();
     }
 
-    valor = fistro.Process(valor);
+    valor = fistro->Process(valor);
     
     return valor;
 }
-
-void AG_Voz::addOscilador(AG_Oscilador *_osc)
-{
-    osc[numOsc++] = _osc;
-    _osc->setEnUso(true);
-}
-
 
 void AG_Voz::NoteOff(uint8_t canal, uint8_t nota)
 {
@@ -94,14 +77,14 @@ void AG_Voz::NoteOn(uint8_t canal, uint8_t nota, float vel, adsrParam pAdsrV, ad
     adsrF->setAll(pAdsrF.a, pAdsrF.d, pAdsrF.s, pAdsrF.r);
     adsrF->reset();
 
-    fistro.setResonance(fResonance);
-    fistro.setCutOff(0);
-    fistro.setTipo(tipo);    
+    fistro->setResonance(fResonance);
+    fistro->setCutOff(0);
+    fistro->setTipo(tipo);    
 
-    fistro.Reset();
-    valor = fistro.Process(valor);
-    valor = fistro.Process(valor);
-    valor = fistro.Process(valor);
+    fistro->Reset();
+    valor = fistro->Process(valor);
+    valor = fistro->Process(valor);
+    valor = fistro->Process(valor);
 
     adsr->gate(true);
     adsrF->gate(true);
