@@ -113,6 +113,7 @@ class AG_Sintetizador
         float soundNoiseLevel = 0.0f;
 
         AG_Voz voces[MAX_POLY_VOICE];
+        unsigned long tRelease[MAX_POLY_VOICE];
         AG_Voz* getFreeVoice();
         float synth_Log(float value, float maxSeg);
 };

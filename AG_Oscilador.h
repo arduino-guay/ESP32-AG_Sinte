@@ -17,48 +17,68 @@
 
 #ifndef AG_OSCILADOR_H
 #define AG_OSCILADOR_H
- 
+
 #include "config.h"
 #include "AG_WaveTable.h"
-    
-class AG_Oscilador {
-    public:
-        AG_Oscilador() { enUso = false; volumen = 1.0; pitchMultiplier = 1; addCents = 0;}
-        void  setModulacion (float _pitchMultiplier) { pitchMultiplier = _pitchMultiplier; }
-        float IRAM_ATTR getSiguienteValor()
-        {
-            samplePos += (uint32_t)( pitchMultiplier * ((float) (addVal +  addCents)));
-            valor = waveForm->getValor(WAVEFORM_I(samplePos));
-            return valor * volumen;
-        }
 
-        float IRAM_ATTR getValor() { return valor; }
-        void IRAM_ATTR setNotaMidi(uint8_t nota, AG_WaveTable *_waveForm, uint32_t _samplePos, uint8_t cents) 
-        {
-            addVal = AG_Util::saltosMidi(nota);
-            samplePos = _samplePos;
-            waveForm = _waveForm;
-            addCents = AG_Util::incCents(nota, cents);
-        }
-        void setOnda(AG_WaveTable *_waveForm) { waveForm = _waveForm; }
-        void IRAM_ATTR setFrecuencia(float fHz)
-        {
-            addVal = (uint32_t)(fHz * ((float)(1ULL << 32ULL) / ((float)SAMPLE_RATE)));
-        }
-        void IRAM_ATTR setEnUso (boolean _enUso) { enUso = _enUso; }
-        void setVolumen (float _volumen) { volumen = _volumen; }
-        boolean estaLibre() {return !enUso; }
+class AG_Oscilador
+{
+public:
+    AG_Oscilador()
+    {
+        volumen = 1.0;
+        pitchMultiplier = 1;
+        addCents = 0;
+    }
 
-    private:
-        float pitchMultiplier;
-        AG_WaveTable *waveForm;
-        uint32_t samplePos;
-        uint32_t addVal;
-        uint32_t addCents;
-        boolean enUso;
-        float volumen;
-        float valor;
+    void setModulacion(float _pitchMultiplier)
+    {
+        pitchMultiplier = _pitchMultiplier;
+    }
+
+    float IRAM_ATTR getSiguienteValor()
+    {
+        samplePos += (uint32_t)(pitchMultiplier * ((float)(addVal + addCents)));
+        valor = waveForm->getValor(WAVEFORM_I(samplePos));
+        return valor * volumen;
+    }
+
+    float IRAM_ATTR getValor()
+    {
+        return valor;
+    }
+
+    void IRAM_ATTR setNotaMidi(uint8_t nota, AG_WaveTable *_waveForm, uint32_t _samplePos, uint8_t cents)
+    {
+        addVal = AG_Util::saltosMidi(nota);
+        samplePos = _samplePos;
+        waveForm = _waveForm;
+        addCents = AG_Util::incCents(nota, cents);
+    }
+
+    void setOnda(AG_WaveTable *_waveForm)
+    {
+        waveForm = _waveForm;
+    }
+
+    void IRAM_ATTR setFrecuencia(float fHz)
+    {
+        addVal = (uint32_t)(fHz * ((float)(1ULL << 32ULL) / ((float)SAMPLE_RATE)));
+    }
+
+    void setVolumen(float _volumen)
+    {
+        volumen = _volumen;
+    }
+
+private:
+    float pitchMultiplier;
+    AG_WaveTable *waveForm;
+    uint32_t samplePos;
+    uint32_t addVal;
+    uint32_t addCents;
+    float volumen;
+    float valor;
 };
 
 #endif
-

@@ -45,7 +45,7 @@ public:
     uint8_t getNotaMidi() { return notaMidi; }
     inline AG_Oscilador* getOsc1() { return osc1; }
     inline AG_Oscilador* getOsc2() { return osc2; }
-    void redisparar() { adsr->retrigger(); adsrF->retrigger(); }
+    unsigned long getTRelease() { return tRelease; } 
 
 private:
     float velocidad;
@@ -57,6 +57,7 @@ private:
     AG_Oscilador *osc1;
     AG_Oscilador *osc2;
     float valor;
+    unsigned long tRelease;
 };
 
 #endif

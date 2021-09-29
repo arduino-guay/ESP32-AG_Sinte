@@ -32,7 +32,7 @@ class AG_Midi
         static AG_Sintetizador* sinte;
         static void NoteOn(uint8_t ch, uint8_t note, uint8_t vel) 
         {
-            sinte->NoteOn(ch, note, pow(2, ((vel * NORM127MUL) - 1.0f) * 6));
+            sinte->NoteOn(ch, note, vel * NORM127MUL);
             //Serial.printf("ON Ch:%d Nota:%d Vel:%d\n", ch, note, vel);
         }
         static void NoteOff(uint8_t ch, uint8_t note, uint8_t vel)

@@ -19,7 +19,7 @@
 
 #include "AG_Sintetizador.h"
 
-#define TIPOS_ONDA 9
+#define TIPOS_ONDA 8
 
 AG_WTSeno seno = AG_WTSeno();
 AG_WTSierra sierra = AG_WTSierra();
@@ -28,7 +28,6 @@ AG_WTPulso pulso = AG_WTPulso();
 AG_WTTriangular triangular = AG_WTTriangular();
 AG_WTRuidoBlanco ruidoBlanco = AG_WTRuidoBlanco();
 AG_WTSenoDiscreto senoDiscreto = AG_WTSenoDiscreto();
-AG_WTOff silencio = AG_WTOff();
 AG_WTLFR lfr = AG_WTLFR();
 
 AG_WaveTable *tablaOndas[TIPOS_ONDA];
@@ -43,14 +42,12 @@ void cargarTablas()
     tablaOndas[5] = &senoDiscreto;
     tablaOndas[6] = &ruidoBlanco;
     tablaOndas[7] = &lfr;
-    tablaOndas[8] = &silencio;
-   
 }
 
 void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
 {
     /* gerenate a noise signal */
-    float noise_signal = (random(1024) /512.0f - 1.0f) * soundNoiseLevel;
+    float noise_signal = (random(1024) / 512.0f - 1.0f) * soundNoiseLevel;
 
     outMono = 0;
     count += 1;
@@ -60,22 +57,23 @@ void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
     {
         //float pitchVar = pitchBendValue * (1.0 - lfo.getSiguienteValor());
         // pitchMultiplier = pow(2.0f, valLFO * 5 / 12.0f);
-        if ( coefLFOCutoff > 0 ) {
-            fistroGlobal.setCutOff(cutOffGen + (valLFO+1)/2.0 * coefLFOCutoff);
+        if (coefLFOCutoff > 0)
+        {
+            fistroGlobal.setCutOff(cutOffGen + (valLFO + 1) / 2.0 * coefLFOCutoff);
             fistroGlobal.CalculateCoeff();
         }
     }
 
-    for (int i = 0; i < MAX_POLY_VOICE; i++) 
+    for (int i = 0; i < MAX_POLY_VOICE; i++)
     {
-        if ( !voces[i].estaLibre() ) 
+        if (!voces[i].estaLibre())
         {
             voces[i].setModulacion(1 + valLFO * coefLFOFrec);
             outMono += voces[i].Process(count, noise_signal);
         }
     }
 
-    outMono = fistroGlobal.Process(outMono);   
+    outMono = fistroGlobal.Process(outMono);
     outMono *= volumenGen;
     outMono += outMono * coefLFOMod * valLFO;
 
@@ -85,19 +83,26 @@ void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
 
 AG_Voz *AG_Sintetizador::getFreeVoice()
 {
+    unsigned long timeRelease = millis();
+    AG_Voz *voice;
     for (int i = 0; i < MAX_POLY_VOICE; i++)
     {
         if (voces[i].estaLibre())
         {
             return &voces[i];
         }
+        // Guardamos la más antigua en release por si no ahy libres
+        if (  (voces[i].getTRelease() > 0) && (voces[i].getTRelease() < timeRelease) )
+        {
+           timeRelease = voces[i].getTRelease();
+           voice = &voces[i];
+        }     
     }
-    return NULL;
+    return voice;
 }
 
 void AG_Sintetizador::Init()
 {
-    randomSeed(34547379);
     AG_Util::Init();
     cargarTablas();
     wfOsc1 = &seno;
@@ -111,16 +116,14 @@ void AG_Sintetizador::NoteOn(uint8_t ch, uint8_t note, float vel)
     for (uint8_t y = 0; y < vocesUnison; y++)
     {
         AG_Voz *voice = getFreeVoice();
-        if ( voice != nullptr ) {
-          voice->getOsc1()->setNotaMidi(note, wfOsc1, 0, y * centsDetuneUnison);
-          // Movemos la octava entre -5 y +5
-          if (note + incNotaOsc2 < MIDI_NOTE_CNT)
-          {
-              voice->getOsc2()->setNotaMidi(note + incNotaOsc2, wfOsc2, 0, y * centsDetuneUnison);
-              voice->getOsc2()->setVolumen(volOsc2);
-          }
-          voice->NoteOn(ch, note, 1.0, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltro);
+        voice->getOsc1()->setNotaMidi(note, wfOsc1, 0, y * centsDetuneUnison);
+        // Movemos la octava entre -5 y +5
+        if (note + incNotaOsc2 < MIDI_NOTE_CNT)
+        {
+            voice->getOsc2()->setNotaMidi(note + incNotaOsc2, wfOsc2, 0, y * centsDetuneUnison);
+            voice->getOsc2()->setVolumen(volOsc2);
         }
+        voice->NoteOn(ch, note, vel, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltro);
     }
 }
 
@@ -234,7 +237,7 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
         //fistroGlobal.debug();
         break;
     case SYNTH_PARAM_VOICE_FILT_RESO:
-        resoFiltVoz = 0.5f + 10 * value * value * value; 
+        resoFiltVoz = 0.5f + 10 * value * value * value;
         break;
     case SYNTH_PARAM_VOICE_NOISE_LEVEL:
         soundNoiseLevel = value;

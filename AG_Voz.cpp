@@ -40,6 +40,10 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal)
     {
         adsr->process();
         activa = adsr->isActive();
+        if ( !activa  )
+        {
+            tRelease = 0;
+        }
         adsrF->process();
     }
 
@@ -62,6 +66,7 @@ void AG_Voz::NoteOff(uint8_t canal, uint8_t nota)
     {
         adsr->gate(false);
         adsrF->gate(false);
+        tRelease = millis();
     }
 }
 
