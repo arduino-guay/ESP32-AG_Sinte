@@ -28,6 +28,11 @@ AG_Voz::AG_Voz()
     osc1 = new AG_Oscilador();
     osc2 = new AG_Oscilador();
     fistro = new AG_Filtro();
+
+    portamento = false;
+    adsrPorta = new ADSR();
+    adsrPorta->setTargetRatioA(200);
+    adsrPorta->setAttackRate(0);
 }
 
 float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal)
@@ -38,6 +43,12 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal)
 
     if (tics % TICS_ADSR_VOZ == 0)
     {
+        if ( portamento ) {
+          adsrPorta->process();
+          osc1->setFrecuencia(anteriorNota, notaMidi, adsrPorta->getValue());
+          osc2->setFrecuencia(anteriorNota, notaMidi, adsrPorta->getValue());
+        }
+        
         adsr->process();
         activa = adsr->isActive();
         if ( !activa  )
@@ -60,7 +71,7 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal)
     return valor;
 }
 
-void AG_Voz::NoteOff(uint8_t canal, uint8_t nota)
+void AG_Voz::NoteOff(uint8_t nota)
 {
     if (activa && notaMidi == nota)
     {
@@ -70,17 +81,29 @@ void AG_Voz::NoteOff(uint8_t canal, uint8_t nota)
     }
 }
 
-void AG_Voz::NoteOn(uint8_t canal, uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF, float fResonance, AG_Filtro::TipoFiltro tipo)
+void AG_Voz::NoteOn(uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF, float fResonance, AG_Filtro::TipoFiltro tipo)
 {
  
+    anteriorNota = notaMidi;
     notaMidi = nota;
     velocidad = vel;
     valor = 0;
+    if ( portamento ) 
+    {
+      getOsc1()->setNotaMidi(anteriorNota, wfOsc1, 0, centsDetuneUnison);
+      getOsc2()->setNotaMidi(anteriorNota, wfOsc2, 0, centsDetuneUnison);
+    } else 
+    {
+      getOsc1()->setNotaMidi(nota, wfOsc1, 0, centsDetuneUnison);
+      getOsc2()->setNotaMidi(nota, wfOsc2, 0, centsDetuneUnison);
+    }
     adsr->setAll(pAdsrV.a, pAdsrV.d, pAdsrV.s, pAdsrV.r);
     adsr->reset();
 
     adsrF->setAll(pAdsrF.a, pAdsrF.d, pAdsrF.s, pAdsrF.r);
     adsrF->reset();
+
+    adsrPorta->reset();
 
     fistro->setResonance(fResonance);
     fistro->setCutOff(0);
@@ -93,5 +116,6 @@ void AG_Voz::NoteOn(uint8_t canal, uint8_t nota, float vel, adsrParam pAdsrV, ad
 
     adsr->gate(true);
     adsrF->gate(true);
+    adsrPorta->gate(true);
     activa = true;
 }

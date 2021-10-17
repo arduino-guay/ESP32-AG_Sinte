@@ -35,8 +35,10 @@
 #define RED {255,0,0}
 
 #include "AG_Sintetizador.h"
+#include "AG_Arpegiador.h"
+#include "AG_Midi.h"
 
-void Menu_setup(AG_Sintetizador* sinte);
+void Menu_setup(AG_Sintetizador* sinte, AG_Arpegiador* arpe, AG_Midi* midi);
 void Menu_process(void);
 
 #endif

@@ -38,10 +38,15 @@ namespace AG_Util
     void Init();
     float seno(uint32_t x);
     float senoDiscreto(uint32_t x);
+    float akwf1(uint32_t x);
+    float akwf2(uint32_t x);
     float LFR(uint32_t x);
     uint32_t saltosMidi(uint8_t nota);
     uint32_t incCents(uint8_t nota,  uint8_t cents);
+    float getFrecuencia(uint8_t nota);
     void setSaltosSenoDiscreto(uint8_t saltos);
+	  void setAKWF1(uint8_t valor);
+	  void setAKWF2(uint8_t valor);
 }
 
 #endif // AGUAY_UTIL_H

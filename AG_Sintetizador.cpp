@@ -19,7 +19,7 @@
 
 #include "AG_Sintetizador.h"
 
-#define TIPOS_ONDA 8
+#define TIPOS_ONDA 10
 
 AG_WTSeno seno = AG_WTSeno();
 AG_WTSierra sierra = AG_WTSierra();
@@ -29,6 +29,8 @@ AG_WTTriangular triangular = AG_WTTriangular();
 AG_WTRuidoBlanco ruidoBlanco = AG_WTRuidoBlanco();
 AG_WTSenoDiscreto senoDiscreto = AG_WTSenoDiscreto();
 AG_WTLFR lfr = AG_WTLFR();
+AG_WTAKWF1 wtAkwf1 = AG_WTAKWF1();
+AG_WTAKWF2 wtAkwf2 = AG_WTAKWF2();
 
 AG_WaveTable *tablaOndas[TIPOS_ONDA];
 
@@ -42,6 +44,8 @@ void cargarTablas()
     tablaOndas[5] = &senoDiscreto;
     tablaOndas[6] = &ruidoBlanco;
     tablaOndas[7] = &lfr;
+    tablaOndas[8] = &wtAkwf1;
+    tablaOndas[9] = &wtAkwf2;
 }
 
 void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
@@ -51,12 +55,11 @@ void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
 
     outMono = 0;
     count += 1;
+    lfo.setVolumen(volLFO + wheel);
     float valLFO = lfo.getSiguienteValor();
 
     if (count % 100 == 0)
     {
-        //float pitchVar = pitchBendValue * (1.0 - lfo.getSiguienteValor());
-        // pitchMultiplier = pow(2.0f, valLFO * 5 / 12.0f);
         if (coefLFOCutoff > 0)
         {
             fistroGlobal.setCutOff(cutOffGen + (valLFO + 1) / 2.0 * coefLFOCutoff);
@@ -68,7 +71,7 @@ void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
     {
         if (!voces[i].estaLibre())
         {
-            voces[i].setModulacion(1 + valLFO * coefLFOFrec);
+            voces[i].setModulacion(1 + pitchBendValue + valLFO * coefLFOFrec);
             outMono += voces[i].Process(count, noise_signal);
         }
     }
@@ -116,14 +119,13 @@ void AG_Sintetizador::NoteOn(uint8_t ch, uint8_t note, float vel)
     for (uint8_t y = 0; y < vocesUnison; y++)
     {
         AG_Voz *voice = getFreeVoice();
-        voice->getOsc1()->setNotaMidi(note, wfOsc1, 0, y * centsDetuneUnison);
-        // Movemos la octava entre -5 y +5
-        if (note + incNotaOsc2 < MIDI_NOTE_CNT)
-        {
-            voice->getOsc2()->setNotaMidi(note + incNotaOsc2, wfOsc2, 0, y * centsDetuneUnison);
-            voice->getOsc2()->setVolumen(volOsc2);
-        }
-        voice->NoteOn(ch, note, vel, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltro);
+        voice->setWfOsc1(wfOsc1);
+        voice->setWfOsc2(wfOsc2);
+        voice->setCentsDetuneUnison(y * centsDetuneUnison);
+        voice->getOsc2()->setIncNota(incNotaOsc2);
+        voice->getOsc2()->setVolumen(volOsc2);
+        voice->setPortamento(portamento);
+        voice->NoteOn(note, vel, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltro);
     }
 }
 
@@ -131,7 +133,7 @@ void AG_Sintetizador::NoteOff(uint8_t ch, uint8_t note)
 {
     for (int i = 0; i < MAX_POLY_VOICE; i++)
     {
-        voces[i].NoteOff(ch, note);
+        voces[i].NoteOff(note);
     }
 }
 
@@ -188,6 +190,11 @@ void AG_Sintetizador::setUnison(uint8_t _voces, uint8_t _centsDetuneUnison)
     centsDetuneUnison = _centsDetuneUnison;
 }
 
+void AG_Sintetizador::setPortamento(float _portamento)
+{
+  portamento = synth_Log(_portamento,2);
+}
+
 void AG_Sintetizador::setParam(uint8_t slider, float value)
 {
     switch (slider)
@@ -206,6 +213,7 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
         break;
     case SYNTH_PARAM_FIL_ENV_ATTACK:
         adsrFiltro.a = synth_Log(value, 5);
+        //Serial.printf("Attack %f\n", adsrFiltro.a);
         break;
     case SYNTH_PARAM_FIL_ENV_DECAY:
         adsrFiltro.d = synth_Log(value, 5);
@@ -243,7 +251,7 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
         soundNoiseLevel = value;
         break;
     case SYNTH_PARAM_LFO_DEPTH:
-        lfo.setVolumen(value);
+        volLFO = value;
         break;
     case SYNTH_PARAM_LFO_RATE:
         lfo.setFrecuencia(value * 5);

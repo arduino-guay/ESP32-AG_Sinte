@@ -19,38 +19,72 @@
 #define AG_MIDI_H
 
 #include "AG_Sintetizador.h"
+#include "AG_Arpegiador.h"
+
 #define NORM127MUL  0.007874f
+#define SOLO_TECLADO 0
+#define SOLO_ARPEGIADOR 1
+#define MEZCLA 2
 
 class AG_Midi 
 {
     public:
-        AG_Midi(AG_Sintetizador* _sinte) { sinte = _sinte; }
+        AG_Midi(AG_Sintetizador* _sinte, AG_Arpegiador* _arp) { sinte = _sinte; arp = _arp; }
         void Process();
         void Setup();
+        void setModo(uint8_t _modo) { 
+            arp->setEncendido(_modo != SOLO_TECLADO);
+            modo = _modo; 
+        }
 
     private:
         static AG_Sintetizador* sinte;
+        static AG_Arpegiador* arp;
+        static uint8_t modo;  // 0->Teclado 1->Arpegiador 2->Mezcla
+
         static void NoteOn(uint8_t ch, uint8_t note, uint8_t vel) 
         {
-            sinte->NoteOn(ch, note, vel * NORM127MUL);
+            switch (modo)
+            {
+            case SOLO_TECLADO:
+            case MEZCLA:
+                sinte->NoteOn(ch, note, vel * NORM127MUL);
+                break;
+            case SOLO_ARPEGIADOR:
+                arp->noteOn(note);
+                break;
+            }
             //Serial.printf("ON Ch:%d Nota:%d Vel:%d\n", ch, note, vel);
         }
+
         static void NoteOff(uint8_t ch, uint8_t note, uint8_t vel)
         {
-            sinte->NoteOff(ch, note);
+            switch (modo)
+            {
+            case SOLO_TECLADO:
+            case MEZCLA:
+                sinte->NoteOff(ch, note);
+                break;
+            case SOLO_ARPEGIADOR:
+                arp->noteOff(note);
+                break;
+            }
         }
+
         static void ControlChange(uint8_t ch, uint8_t data1, uint8_t data2)
         {
             //Serial.printf("CC Ch,D1, D2 %d %d %d\n", ch, data1, data2);
             if (data1 == 1)
             {
-                sinte->setModWheel(ch, (float)data2 * NORM127MUL);
+                //sinte->setModWheel(ch, (float)data2 * NORM127MUL);
+                sinte->setPortamento((float)data2 * NORM127MUL);
             }
         }
+
         static void PitchBend(uint8_t ch, int bend)
         {
             //Serial.printf("Bend Ch,bend, %d %d\n", ch, bend);
-            sinte->setPitchBend(ch, ((float)bend - 8192.0f) * (1.0f / 8192.0f) - 1.0f);
+            sinte->setPitchBend(ch, bend * (0.2f / 8192.0f));
         }
 
 };

@@ -19,10 +19,23 @@
 
 #include "AG_Util.h"
 #include "AG_Filtro.h"
+#include "AG_AKWF.h"
 
 static float _senos[WAVEFORM_CNT];
 static float _senoDiscreto[WAVEFORM_CNT];
 static float _lfr[WAVEFORM_CNT];
+static float _akwf1[WAVEFORM_CNT];
+static float _akwf2[WAVEFORM_CNT];
+
+const int16_t* AKWF_samples[6]  = {
+    AKWF_aguitar_0001,
+    AKWF_aguitar_0020,
+    AKWF_altosax_0017,
+    AKWF_altosax_0018,
+    AKWF_violin_0001,
+    AKWF_violin_0007
+};
+
 
 static uint32_t _saltosMidi[MIDI_NOTE_CNT]; 
 
@@ -100,6 +113,16 @@ namespace AG_Util
         return _lfr[x];
     }
 
+    float IRAM_ATTR akwf1(uint32_t x)
+    {
+        return _akwf1[x];
+    }
+
+    float IRAM_ATTR akwf2(uint32_t x)
+    {
+        return _akwf2[x];
+    }
+
     uint32_t saltosMidi(uint8_t nota)
     {
         return _saltosMidi[nota];
@@ -110,11 +133,33 @@ namespace AG_Util
         return (uint32_t)((_incCents[cents] - 1) * _frecuenciasMidi[nota] * ((float)(1ULL << 32ULL) / ((float)SAMPLE_RATE)));
     }
 
+    float IRAM_ATTR getFrecuencia(uint8_t nota)
+    {
+        return _frecuenciasMidi[nota];
+    }
+    
     void setSaltosSenoDiscreto(uint8_t saltos)
     {
         saltosSenoDiscreto = saltos;
         calculaSenoDiscreto();
     }
-    
+
+ 	void setAKWF1(uint8_t valor)
+    {
+       for (int i = 0; i < WAVEFORM_CNT; i++)
+        {
+            _akwf1[i] = AKWF_samples[valor][i] / 32768.0;
+        }
+    }
+
+	void setAKWF2(uint8_t valor)
+    {
+       for (int i = 0; i < WAVEFORM_CNT; i++)
+        {
+            _akwf2[i] = AKWF_samples[valor][i] / 32768.0;
+        }
+    }
+
+   
 }
 

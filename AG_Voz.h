@@ -31,33 +31,44 @@
 class AG_Voz
 {
 public:
+    
     AG_Voz(void);
-    void NoteOn(uint8_t canal, uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF, float fResonance, AG_Filtro::TipoFiltro tipo);
+    void NoteOn(uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF, float fResonance, AG_Filtro::TipoFiltro tipo);
     inline void setModulacion(float _pitchMultiplier)
     {
         osc1->setModulacion(_pitchMultiplier);
         osc2->setModulacion(_pitchMultiplier);
     }
-    void NoteOff(uint8_t canal, uint8_t nota);
+    void NoteOff(uint8_t nota);
     float Process(uint32_t tics, float noise_signal);
     float getValor() { return valor; }
     boolean estaLibre() { return !activa; }
     uint8_t getNotaMidi() { return notaMidi; }
     inline AG_Oscilador* getOsc1() { return osc1; }
     inline AG_Oscilador* getOsc2() { return osc2; }
+    void setWfOsc1 (AG_WaveTable* _wfOsc) { wfOsc1 = _wfOsc; }
+    void setWfOsc2 (AG_WaveTable* _wfOsc) { wfOsc2 = _wfOsc; }
+    void setCentsDetuneUnison(uint8_t _centsDetuneUnison) { centsDetuneUnison = centsDetuneUnison;}
     unsigned long getTRelease() { return tRelease; } 
+    void setPortamento(uint16_t value) { portamento = value > 0; adsrPorta->setAttackRate(value); } 
 
 private:
     float velocidad;
     uint8_t notaMidi;
+    uint8_t anteriorNota;
     boolean activa;
     ADSR *adsr;
     ADSR *adsrF;
+    ADSR *adsrPorta;
     AG_Filtro *fistro;
     AG_Oscilador *osc1;
     AG_Oscilador *osc2;
+    AG_WaveTable *wfOsc1;
+    AG_WaveTable *wfOsc2;
+    uint8_t centsDetuneUnison;
     float valor;
     unsigned long tRelease;
+    boolean portamento;
 };
 
 #endif

@@ -92,12 +92,24 @@ public:
    float getValor(uint32_t i);
 };
 
+class AG_WTAKWF1 : public AG_WaveTable
+{
+public:
+   float IRAM_ATTR getValor(uint32_t i) { return AG_Util::akwf1(i); }
+};
+
+class AG_WTAKWF2 : public AG_WaveTable
+{
+public:
+   float IRAM_ATTR getValor(uint32_t i) { return AG_Util::akwf2(i); }
+};
+
+
 class AG_WTOff : public AG_WaveTable
 {
 public:
    float getValor(uint32_t i);
 };
-
 
 
 #endif //AG_WAVETABLE_H

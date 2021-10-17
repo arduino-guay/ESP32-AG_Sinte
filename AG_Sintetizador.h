@@ -68,11 +68,8 @@ class AG_Sintetizador
         void Process(float *left, float *right);
         void NoteOn(uint8_t ch, uint8_t note, float vel);
         void NoteOff(uint8_t ch, uint8_t note);
-        void setModulationWheel(uint8_t ch, float value);
-        void setModulationSpeed(uint8_t ch, float value);
-        void setModulationPitch(uint8_t ch, float value);
-        void setPitchBend(uint8_t ch, float bend) {}
-        void setModWheel(uint8_t ch, float bend) {}
+        void setPitchBend(uint8_t ch, float bend) {pitchBendValue = bend;}
+        void setModWheel(uint8_t ch, float _wheel) { wheel = _wheel;}
         void setWaveFormOsc1(uint8_t selWaveForm);
         void setWaveFormOsc2(uint8_t selWaveForm);
         void setWaveFormLFO(uint8_t selWaveForm);
@@ -83,6 +80,9 @@ class AG_Sintetizador
         void setTipoFiltroVoz(uint8_t tipo);
         void setDestinoLFO(float mod, float frec, float cutoff);
         void setUnison(uint8_t _voces, uint8_t _centsDetune);
+        void setAKWF1(uint8_t valor);
+        void setAKWF2(uint8_t valor);
+        void setPortamento(float _portamento);
 
     private:
         AG_WaveTable *wfOsc1;
@@ -107,13 +107,18 @@ class AG_Sintetizador
         float coefLFOMod = 1.0f;
         float coefLFOFrec = 0;
         float coefLFOCutoff = 0;
+        float volLFO = 0;
+
+        float pitchBendValue = 0;
+        float wheel = 0;
 
         float resoFiltVoz; 
         float cutOffGen; 
         float soundNoiseLevel = 0.0f;
 
+        float portamento = 0.0f;
+               
         AG_Voz voces[MAX_POLY_VOICE];
-        unsigned long tRelease[MAX_POLY_VOICE];
         AG_Voz* getFreeVoice();
         float synth_Log(float value, float maxSeg);
 };
