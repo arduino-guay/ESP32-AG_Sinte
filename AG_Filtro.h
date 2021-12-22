@@ -38,8 +38,10 @@ public:
     void Reset();
     float getCutOff() { return cutOff; }
     float getResonace() { return resonance; }
-    void setCutOff(float _cutOff) { _cutOff >= 1.0 ? cutOff = 0.99: cutOff = _cutOff; apagado = (cutOff < 0.00001 || resonance <= 0.5) ; }
-    void setResonance(float _resonance) { resonance = _resonance; apagado = (cutOff < 0.00001 || resonance <= 0.5) ;}
+    // Cutoff en Hz
+    void setCutOff(float _cutOff) { _cutOff >= 1.0 ? cutOff = 0.99: cutOff = _cutOff; apagado = (cutOff < 0.00001 || resonance <= 0.015) ; }
+    //void setCutOff(float _cutOff) {cutOff = _cutOff; apagado = (cutOff < 0.1 || resonance <= 0.01) ; }
+    void setResonance(float _resonance) { resonance = _resonance; apagado = (cutOff < 0.00001 || resonance <= 0.015) ;}
     void setTipo(TipoFiltro _tipo) { tipo = _tipo; }
     void debug(); 
 

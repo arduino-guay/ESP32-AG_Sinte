@@ -51,7 +51,7 @@ void cargarTablas()
 void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
 {
     /* gerenate a noise signal */
-    float noise_signal = (random(1024) / 512.0f - 1.0f) * soundNoiseLevel;
+    float noise_signal = (random(10000) / 5000.0f - 1.0f) * soundNoiseLevel;
 
     outMono = 0;
     count += 1;
@@ -197,6 +197,8 @@ void AG_Sintetizador::setPortamento(float _portamento)
 
 void AG_Sintetizador::setParam(uint8_t slider, float value)
 {
+    int octavas;
+    float ratio;
     switch (slider)
     {
     case SYNTH_PARAM_VOL_ENV_ATTACK:
@@ -230,22 +232,25 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
     case SYNTH_PARAM_PITCH_OSC2:
         // Movemos entre +/- 5 octavas
         incNotaOsc2 = ((uint8_t)(value * 10) - 5) * 12;
+        //ratio = pow(2,(value * 10) - 5);
+        //incNotaOsc2 = log2(ratio) * 12;
+        //Serial.printf("Ratio %f\n", ratio);
         break;
     case SYNTH_PARAM_MAIN_FILT_CUTOFF:
-        cutOffGen = value * value * value;
-        fistroGlobal.setCutOff(value * value * value);
+        cutOffGen = value;
+        fistroGlobal.setCutOff(value);
         //Serial.printf("Cutoff %f\n", cutOffGen);
         fistroGlobal.CalculateCoeff();
         //fistroGlobal.debug();
         break;
     case SYNTH_PARAM_MAIN_FILT_RESO:
-        fistroGlobal.setResonance(0.5f + 10 * value * value * value);
+        fistroGlobal.setResonance(0.01f + 20 * value * value * value);
         fistroGlobal.CalculateCoeff();
         //Serial.printf("Resonancia %f\n", 0.5f + 10 * value * value * value);
         //fistroGlobal.debug();
         break;
     case SYNTH_PARAM_VOICE_FILT_RESO:
-        resoFiltVoz = 0.5f + 10 * value * value * value;
+        resoFiltVoz = 0.01f + 20 * value * value * value;
         break;
     case SYNTH_PARAM_VOICE_NOISE_LEVEL:
         soundNoiseLevel = value;

@@ -22,7 +22,7 @@ float IRAM_ATTR AG_WTTriangular::getValor(uint32_t i)
 
 float IRAM_ATTR AG_WTRuidoBlanco::getValor(uint32_t i) 
 { 
-    return (random(1024) / 512.0f) - 1.0f; 
+    return (random(10000) / 5000.0) - 1.0f; 
 }
 
 float IRAM_ATTR AG_WTOff::getValor(uint32_t i) 

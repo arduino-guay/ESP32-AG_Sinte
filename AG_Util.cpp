@@ -19,7 +19,7 @@
 
 #include "AG_Util.h"
 #include "AG_Filtro.h"
-#include "AG_AKWF.h"
+#include "AG_AKWF.hpp"
 
 static float _senos[WAVEFORM_CNT];
 static float _senoDiscreto[WAVEFORM_CNT];

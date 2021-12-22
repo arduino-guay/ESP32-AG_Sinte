@@ -31,7 +31,8 @@
 #define WAVEFORM_Q4 (1 << (WAVEFORM_BIT - 2))
 #define WAVEFORM_MSK ((1 << WAVEFORM_BIT) - 1)
 #define WAVEFORM_I(i) ((i) >> (32 - WAVEFORM_BIT)) & WAVEFORM_MSK
-#define MIDI_NOTE_CNT 160
+#define MIDI_NOTE_CNT 320
+#define PI_MEDIO 1.5707963
 
 namespace AG_Util
 {

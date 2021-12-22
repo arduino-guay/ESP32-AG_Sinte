@@ -26,7 +26,8 @@ void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota)
 
 void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota, AG_WaveTable *_waveForm, uint32_t _samplePos, uint8_t cents)
 {
-    if (nota + incNota < MIDI_NOTE_CNT)
+    //if (nota + incNota < MIDI_NOTE_CNT)
+    if (1)
     {
         addVal = AG_Util::saltosMidi(nota + incNota);
         addCents = AG_Util::incCents(nota + incNota, cents);

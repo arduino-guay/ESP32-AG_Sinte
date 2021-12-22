@@ -48,7 +48,7 @@ public:
     inline AG_Oscilador* getOsc2() { return osc2; }
     void setWfOsc1 (AG_WaveTable* _wfOsc) { wfOsc1 = _wfOsc; }
     void setWfOsc2 (AG_WaveTable* _wfOsc) { wfOsc2 = _wfOsc; }
-    void setCentsDetuneUnison(uint8_t _centsDetuneUnison) { centsDetuneUnison = centsDetuneUnison;}
+    void setCentsDetuneUnison(uint8_t _centsDetuneUnison) { centsDetuneUnison = _centsDetuneUnison;}
     unsigned long getTRelease() { return tRelease; } 
     void setPortamento(uint16_t value) { portamento = value > 0; adsrPorta->setAttackRate(value); } 
 

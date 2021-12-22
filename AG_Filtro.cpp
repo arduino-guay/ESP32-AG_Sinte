@@ -41,19 +41,7 @@ void AG_Filtro::Reset()
 void IRAM_ATTR AG_Filtro::CalculateCoeff()
 {
     float cosOmega, omega, sinOmega, alpha, a[3], b[3];
-
-    if (cutOff >= 1.0f)
-    {
-        omega = 1.0f;
-    }
-    else if (cutOff < 0.0025f)
-    {
-        omega = 0.0025f;
-    }
-    else
-    {
-        omega = cutOff;
-    }
+    omega = cutOff * 8000 * PI_MEDIO / SAMPLE_RATE;
 
     uint32_t tmp1 = (uint32_t)(fSeno * omega); 
     cosOmega = AG_Util::seno(WAVEFORM_I( tmp1 + fCoseno ));
