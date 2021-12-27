@@ -28,6 +28,7 @@ AG_Voz::AG_Voz()
     osc1 = new AG_Oscilador();
     osc2 = new AG_Oscilador();
     fistro = new AG_Filtro();
+    fistroGral= new AG_Filtro();
 
     portamento = false;
     adsrPorta = new ADSR();
@@ -40,7 +41,6 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal)
     valor = noise_signal;
     valor += osc1->getSiguienteValor();
     valor += osc2->getSiguienteValor();
-
     if (tics % TICS_ADSR_VOZ == 0)
     {
         if ( portamento ) {
@@ -66,6 +66,7 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics, float noise_signal)
         fistro->CalculateCoeff();
     }
 
+    valor = fistroGral->Process(valor);
     valor = fistro->Process(valor);
     
     return valor;
@@ -90,12 +91,12 @@ void AG_Voz::NoteOn(uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF,
     valor = 0;
     if ( portamento ) 
     {
-      getOsc1()->setNotaMidi(anteriorNota, wfOsc1, 0, centsDetuneUnison);
-      getOsc2()->setNotaMidi(anteriorNota, wfOsc2, 0, centsDetuneUnison);
+      getOsc1()->setNotaMidi(anteriorNota, 0, centsDetuneUnison);
+      getOsc2()->setNotaMidi(anteriorNota, 0, centsDetuneUnison);
     } else 
     {
-      getOsc1()->setNotaMidi(nota, wfOsc1, 0, centsDetuneUnison);
-      getOsc2()->setNotaMidi(nota, wfOsc2, 0, centsDetuneUnison);
+      getOsc1()->setNotaMidi(nota, 0, centsDetuneUnison);
+      getOsc2()->setNotaMidi(nota, 0, centsDetuneUnison);
     }
     adsr->setAll(pAdsrV.a, pAdsrV.d, pAdsrV.s, pAdsrV.r);
     adsr->reset();
@@ -106,6 +107,7 @@ void AG_Voz::NoteOn(uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF,
     adsrPorta->reset();
 
     fistro->setResonance(fResonance);
+    fistro->setNotaMidi(nota);
     fistro->setCutOff(0);
     fistro->setTipo(tipo);    
 
@@ -113,6 +115,14 @@ void AG_Voz::NoteOn(uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF,
     valor = fistro->Process(valor);
     valor = fistro->Process(valor);
     valor = fistro->Process(valor);
+
+    fistroGral->setNotaMidi(nota);
+    fistroGral->CalculateCoeff();
+    fistroGral->Reset();
+    fistroGral->Process(0);
+    fistroGral->Process(0);
+    fistroGral->Process(0);
+    fistroGral->debug();
 
     adsr->gate(true);
     adsrF->gate(true);

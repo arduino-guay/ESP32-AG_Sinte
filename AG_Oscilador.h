@@ -38,9 +38,10 @@ public:
     }
 
     float getSiguienteValor();
+    void setWfOsc (AG_WaveTable* _wfOsc) { waveForm = _wfOsc; }
     float getValor();
     void setNotaMidi(uint8_t nota);
-    void setNotaMidi(uint8_t nota, AG_WaveTable *_waveForm, uint32_t _samplePos, uint8_t cents);
+    void setNotaMidi(uint8_t nota, uint32_t _samplePos, uint8_t cents);
     void setFrecuencia(float fHz);   
     void setFrecuencia(uint8_t notaDesde, uint8_t notaHasta, float porc);
 
@@ -58,6 +59,7 @@ public:
     {
         incNota = _incNota;
     }
+    void reset() { samplePos = 0; }
 
 private:
     float pitchMultiplier;

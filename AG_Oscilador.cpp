@@ -24,7 +24,7 @@ void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota)
     }
 }
 
-void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota, AG_WaveTable *_waveForm, uint32_t _samplePos, uint8_t cents)
+void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota, uint32_t _samplePos, uint8_t cents)
 {
     //if (nota + incNota < MIDI_NOTE_CNT)
     if (1)
@@ -38,7 +38,6 @@ void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota, AG_WaveTable *_waveForm, 
         addCents = AG_Util::incCents(incNota, cents);
     }
     samplePos = _samplePos;
-    waveForm = _waveForm;
 }
 
 void IRAM_ATTR AG_Oscilador::setFrecuencia(float fHz)

@@ -58,25 +58,21 @@ void IRAM_ATTR AG_Sintetizador::Process(float *left, float *right)
     lfo.setVolumen(volLFO + wheel);
     float valLFO = lfo.getSiguienteValor();
 
-    if (count % 100 == 0)
-    {
-        if (coefLFOCutoff > 0)
-        {
-            fistroGlobal.setCutOff(cutOffGen + (valLFO + 1) / 2.0 * coefLFOCutoff);
-            fistroGlobal.CalculateCoeff();
-        }
-    }
-
     for (int i = 0; i < MAX_POLY_VOICE; i++)
     {
         if (!voces[i].estaLibre())
         {
             voces[i].setModulacion(1 + pitchBendValue + valLFO * coefLFOFrec);
+            if (count % 50 == 0 && coefLFOCutoff > 0)
+            {
+            voces[i].getFistro()->setCutOff((cutOffGen + (valLFO + 1) / 2.0 * coefLFOCutoff));
+            voces[i].getFistro()->CalculateCoeff();
+            }
             outMono += voces[i].Process(count, noise_signal);
         }
     }
 
-    outMono = fistroGlobal.Process(outMono);
+    //outMono = fistroGlobal.Process(outMono);
     outMono *= volumenGen;
     outMono += outMono * coefLFOMod * valLFO;
 
@@ -116,16 +112,20 @@ void AG_Sintetizador::Init()
 
 void AG_Sintetizador::NoteOn(uint8_t ch, uint8_t note, float vel)
 {
+    lfo.reset();
     for (uint8_t y = 0; y < vocesUnison; y++)
     {
         AG_Voz *voice = getFreeVoice();
-        voice->setWfOsc1(wfOsc1);
-        voice->setWfOsc2(wfOsc2);
         voice->setCentsDetuneUnison(y * centsDetuneUnison);
+        voice->getOsc1()->setWfOsc(wfOsc1);
+        voice->getOsc2()->setWfOsc(wfOsc2);
         voice->getOsc2()->setIncNota(incNotaOsc2);
         voice->getOsc2()->setVolumen(volOsc2);
+        voice->getFistro()->setCutOff(cutOffGen);
+        voice->getFistro()->setResonance(resoGen);
+        voice->getFistro()->setTipo(tipoFiltroGen);
         voice->setPortamento(portamento);
-        voice->NoteOn(note, vel, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltro);
+        voice->NoteOn(note, vel, adsrVolumen, adsrFiltro, resoFiltVoz, tipoFiltroVoz);
     }
 }
 
@@ -169,12 +169,12 @@ float AG_Sintetizador::synth_Log(float value, float maxSeg)
 
 void AG_Sintetizador::setTipoFiltroGeneral(uint8_t tipo)
 {
-    fistroGlobal.setTipo(fistroGlobal.TiposFiltro[tipo]);
+    tipoFiltroGen = static_cast<AG_Filtro::TipoFiltro>(tipo);
 }
 
 void AG_Sintetizador::setTipoFiltroVoz(uint8_t tipo)
 {
-    tipoFiltro = fistroGlobal.TiposFiltro[tipo];
+    tipoFiltroVoz = static_cast<AG_Filtro::TipoFiltro>(tipo);
 }
 
 void AG_Sintetizador::setDestinoLFO(float mod, float frec, float cutoff)
@@ -237,15 +237,11 @@ void AG_Sintetizador::setParam(uint8_t slider, float value)
         //Serial.printf("Ratio %f\n", ratio);
         break;
     case SYNTH_PARAM_MAIN_FILT_CUTOFF:
-        cutOffGen = value;
-        fistroGlobal.setCutOff(value);
+        cutOffGen = (value * value * value) / 2 ;
         //Serial.printf("Cutoff %f\n", cutOffGen);
-        fistroGlobal.CalculateCoeff();
-        //fistroGlobal.debug();
         break;
     case SYNTH_PARAM_MAIN_FILT_RESO:
-        fistroGlobal.setResonance(0.01f + 20 * value * value * value);
-        fistroGlobal.CalculateCoeff();
+        resoGen = 0.01f + 20 * value * value * value;
         //Serial.printf("Resonancia %f\n", 0.5f + 10 * value * value * value);
         //fistroGlobal.debug();
         break;

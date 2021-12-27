@@ -30,6 +30,7 @@ AG_Filtro::AG_Filtro(void)
     fSeno = (1ULL << 31) - 1;
     fCoseno = (1ULL << 30) - 1;
     tipo = LOWPASS;
+    setNotaMidi(NOTA_BASE_FILTRO);
 }
 
 void AG_Filtro::Reset()
@@ -41,7 +42,7 @@ void AG_Filtro::Reset()
 void IRAM_ATTR AG_Filtro::CalculateCoeff()
 {
     float cosOmega, omega, sinOmega, alpha, a[3], b[3];
-    omega = cutOff * 8000 * PI_MEDIO / SAMPLE_RATE;
+    omega = cutOff * ratioNota ;
 
     uint32_t tmp1 = (uint32_t)(fSeno * omega); 
     cosOmega = AG_Util::seno(WAVEFORM_I( tmp1 + fCoseno ));
@@ -94,6 +95,6 @@ float IRAM_ATTR AG_Filtro::Process(float const signal)
 
 void AG_Filtro::debug()
 {
-  Serial.printf("Apagado %s - Cutoff: %f - Reso: %f - aNorm: %f,%f - bNorm: %f,%f,%f - w: %f,%f\n", apagado? "Si":"No" , cutOff, resonance, aNorm[0], aNorm[1], bNorm[0], bNorm[1], bNorm[2], w[0], w[1]); 
+  Serial.printf("Apagado %s - Cutoff: %f - Ratio: %f - Reso: %f - Freq: %f\n", apagado? "Si":"No" , cutOff, ratioNota, resonance, cutOff * ratioNota * SAMPLE_RATE / PI_MEDIO); 
 }
 

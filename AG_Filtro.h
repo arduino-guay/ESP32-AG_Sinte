@@ -23,6 +23,9 @@
 #include <Arduino.h>
 #include "AG_Util.h"
 
+#define MAX_FREQ_CUTOFF 15000
+#define NOTA_BASE_FILTRO 64
+
 class AG_Filtro
 {
 public:
@@ -31,7 +34,7 @@ public:
             LOWPASS = 0,
             HIGHPASS
         };
-    const TipoFiltro TiposFiltro[2] = { LOWPASS, HIGHPASS };
+
     AG_Filtro(void);
     void CalculateCoeff();
     float Process(float const signal);
@@ -42,12 +45,16 @@ public:
     void setCutOff(float _cutOff) { _cutOff >= 1.0 ? cutOff = 0.99: cutOff = _cutOff; apagado = (cutOff < 0.00001 || resonance <= 0.015) ; }
     //void setCutOff(float _cutOff) {cutOff = _cutOff; apagado = (cutOff < 0.1 || resonance <= 0.01) ; }
     void setResonance(float _resonance) { resonance = _resonance; apagado = (cutOff < 0.00001 || resonance <= 0.015) ;}
+    //void setNotaMidi(uint8_t nota) { ratioNota = (AG_Util::getFrecuencia(nota) / AG_Util::getFrecuencia(64)) * MAX_FREQ_CUTOFF * PI_MEDIO / SAMPLE_RATE; };
+    void setNotaMidi(uint8_t nota) { ratioNota = nota * PI_MEDIO * MAX_FREQ_CUTOFF / NOTA_BASE_FILTRO / SAMPLE_RATE; };
     void setTipo(TipoFiltro _tipo) { tipo = _tipo; }
+    TipoFiltro getTipo () { return tipo; }
     void debug(); 
 
 private:
     float cutOff;
     float resonance;
+    float ratioNota;
     float aNorm[2];
     float bNorm[3];
     float w[2];

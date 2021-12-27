@@ -57,8 +57,10 @@
 #define SYNTH_PARAM_VOICE_NOISE_LEVEL	4
 
 
-#define MAX_POLY_OSC	22 /* osc polyphony, always active reduces single voices max poly */
-#define MAX_POLY_VOICE	11 /* max single voices, can use multiple osc */
+#define MAX_POLY_OSC	18 /* osc polyphony, always active reduces single voices max poly */
+#define MAX_POLY_VOICE	9 /* max single voices, can use multiple osc */
+
+#define NOTA_BASE_KEYTRACK 64
 
 
 class AG_Sintetizador 
@@ -88,7 +90,6 @@ class AG_Sintetizador
         AG_WaveTable *wfOsc1;
         AG_WaveTable *wfOsc2;
         AG_Oscilador lfo;
-        AG_Filtro fistroGlobal;
         adsrParam adsrFiltro;
         adsrParam adsrVolumen;
         float volumenGen = 0.05;
@@ -101,7 +102,6 @@ class AG_Sintetizador
         // Param Unison
         uint8_t vocesUnison = 2;
         uint8_t centsDetuneUnison = 10;
-        AG_Filtro::TipoFiltro  tipoFiltro;
 
         // param LFO
         float coefLFOMod = 1.0f;
@@ -112,8 +112,12 @@ class AG_Sintetizador
         float pitchBendValue = 0;
         float wheel = 0;
 
+        // Filtros
         float resoFiltVoz; 
         float cutOffGen; 
+        float resoGen; 
+        AG_Filtro::TipoFiltro  tipoFiltroVoz;
+        AG_Filtro::TipoFiltro  tipoFiltroGen;
         float soundNoiseLevel = 0.0f;
 
         float portamento = 0.0f;
