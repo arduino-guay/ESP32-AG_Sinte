@@ -44,6 +44,7 @@ public:
     void setReleaseRate(float rate);
     void setSustainLevel(float level);
     void setAll(float aRate, float dRate, float sLevel, float rRate);
+    void setAll(adsrParam* param);
     void setTargetRatioA(float targetRatio);
     void setTargetRatioDR(float targetRatio);
     void reset(void);

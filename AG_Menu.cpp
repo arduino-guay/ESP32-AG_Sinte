@@ -57,6 +57,7 @@ extern float delayFeedback;
 uint8_t _poliVoces = 1;
 uint8_t _centsDetune = 10;
 uint8_t _portamento = 0;
+float ultimoValor = 0;
 
 // Arpegiador
 uint8_t _arpModo = 0;
@@ -79,7 +80,7 @@ uint8_t _arpOctavas = 1;
 float _coefLFOMod = 1;
 float _coefLFOFrec = 0;
 float _coefLFOCutoff = 0;
-AG_Sintetizador* _sinte;
+AG_Param* _param;
 AG_Arpegiador* _arpe;
 AG_Midi* _midi;
 
@@ -218,6 +219,7 @@ MENU(menuArpegiador,"Arpegiador",doNothing,noEvent,wrapStyle
 );  
 
 MENU(mainMenu,"Menu principal",doNothing,noEvent,wrapStyle
+  ,FIELD(ultimoValor,"Valor:","",0,10000,1,1, Menu::doNothing, Menu::noEvent, Menu::noStyle)
   ,SUBMENU(menuOsc1)
   ,SUBMENU(menuOsc2)
   ,SUBMENU(menuLfo)
@@ -254,10 +256,10 @@ MENU_OUTPUTS(out,MAX_DEPTH
 );
 NAVROOT(nav,mainMenu,MAX_DEPTH,in,out);
 
-void Menu_setup(AG_Sintetizador* sinte, AG_Arpegiador* arpe, AG_Midi* midi)
+void Menu_setup(AG_Param* param, AG_Arpegiador* arpe, AG_Midi* midi)
 {
 
-  _sinte = sinte;
+  _param = param;
   _arpe = arpe;
   _midi = midi;
   clickEncoder.setAccelerationEnabled(false);
@@ -277,18 +279,19 @@ void Menu_setup(AG_Sintetizador* sinte, AG_Arpegiador* arpe, AG_Midi* midi)
 
 void Menu_process(void)
 {
+  ultimoValor = _param->getUltimoValor();
   nav.poll();
   AG_Util::setAKWF1(akwf1);
   AG_Util::setAKWF2(akwf2);
-  _sinte->setWaveFormOsc1(osc1);
-  _sinte->setWaveFormOsc2(osc2);
-  _sinte->setWaveFormLFO(lfoWT);
-  _sinte->setCicloPulso(cicloPulso);
-  _sinte->setSaltosSeno(saltosSeno);
-  _sinte->setTipoFiltroGeneral(tipoFiltroGlobal);
-  _sinte->setTipoFiltroVoz(tipoFiltroVoz);
-  _sinte->setDestinoLFO(_coefLFOMod, _coefLFOFrec, _coefLFOCutoff);
-  _sinte->setUnison(_poliVoces, _centsDetune);
+  _param->setWaveFormOsc1(osc1);
+  _param->setWaveFormOsc2(osc2);
+  _param->setWaveFormLFO(lfoWT);
+  _param->setCicloPulso(cicloPulso);
+  _param->setSaltosSeno(saltosSeno);
+  _param->setTipoFiltroGeneral(tipoFiltroGlobal);
+  _param->setTipoFiltroVoz(tipoFiltroVoz);
+  _param->setDestinoLFO(_coefLFOMod, _coefLFOFrec, _coefLFOCutoff);
+  _param->setUnison(_poliVoces, _centsDetune);
   _arpe->setMantener(_arpMantener);
   _arpe->setModo(modos[_arpTipo]);
   _arpe->setBPM(_arpBPM);
@@ -297,8 +300,7 @@ void Menu_process(void)
   _arpe->setVelocidad(_arpVolumen);
   _arpe->setOcatavas(_arpOctavas);
   _midi->setModo(_arpModo);
-
-  //_sinte->setPortamento(_portamento/100);
+  //_param->setPortamento(_portamento/100);
   if ( micros() - _utime > 1000 ) {
       _utime = micros();
        clickEncoder.service();

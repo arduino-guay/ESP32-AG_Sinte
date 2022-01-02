@@ -20,6 +20,7 @@
 
 #include "AG_Sintetizador.h"
 #include "AG_Arpegiador.h"
+#include "AG_Param.h"
 
 #define NORM127MUL  0.007874f
 #define SOLO_TECLADO 0
@@ -29,7 +30,7 @@
 class AG_Midi 
 {
     public:
-        AG_Midi(AG_Sintetizador* _sinte, AG_Arpegiador* _arp) { sinte = _sinte; arp = _arp; }
+        AG_Midi(AG_Sintetizador* _sinte, AG_Param* _param, AG_Arpegiador* _arp) { sinte = _sinte; arp = _arp; param = _param; }
         void Process();
         void Setup();
         void setModo(uint8_t _modo) { 
@@ -41,6 +42,7 @@ class AG_Midi
         static AG_Sintetizador* sinte;
         static AG_Arpegiador* arp;
         static uint8_t modo;  // 0->Teclado 1->Arpegiador 2->Mezcla
+        static AG_Param* param;
 
         static void NoteOn(uint8_t ch, uint8_t note, uint8_t vel) 
         {
@@ -77,14 +79,14 @@ class AG_Midi
             if (data1 == 1)
             {
                 //sinte->setModWheel(ch, (float)data2 * NORM127MUL);
-                sinte->setPortamento((float)data2 * NORM127MUL);
+                param->setPortamento((float)data2 * NORM127MUL);
             }
         }
 
         static void PitchBend(uint8_t ch, int bend)
         {
             //Serial.printf("Bend Ch,bend, %d %d\n", ch, bend);
-            sinte->setPitchBend(ch, bend * (0.2f / 8192.0f));
+            param->setPitchBend(ch, bend * (0.2f / 8192.0f));
         }
 
 };

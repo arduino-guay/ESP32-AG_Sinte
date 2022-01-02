@@ -35,7 +35,7 @@ float AG_ADC::valorFloat (uint16_t valorInt) {
 }
 
 void AG_ADC::procesa (boolean refrescar) {
-    sinte->setParam(SYNTH_PARAM_VOLUMEN, valorFloat(analogRead(ADC_VOLUMEN)));
+    param->setParam(SYNTH_PARAM_VOLUMEN, valorFloat(analogRead(ADC_VOLUMEN)));
     for (uint8_t i = 0; i < MAX_ENTRADAS; i++)
     {
         digitalWrite (S0, (i & 0x01) );   
@@ -45,7 +45,7 @@ void AG_ADC::procesa (boolean refrescar) {
         delay(RETARDO_ACTIVACION);
         uint16_t valor = analogRead(ADC_PIN);
         if ( (abs(antValores[i] - valor) > 5) || refrescar ) {
-            sinte->setParam(i, valorFloat(valor));
+            param->setParam(i, valorFloat(valor), refrescar);
             antValores[i] = valor;
         }
     }

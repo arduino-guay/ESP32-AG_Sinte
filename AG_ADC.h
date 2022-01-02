@@ -20,7 +20,7 @@
 #define AGUAY_ADC_H
 
 #include <Arduino.h>
-#include "AG_Sintetizador.h"
+#include "AG_Param.h"
 
 #define MAX_ENTRADAS 16
 #define BITS_RESOLUCION_ADC 9
@@ -39,7 +39,7 @@
 class AG_ADC {
     
 	public:
-		AG_ADC(AG_Sintetizador* _sinte) { sinte = _sinte; }
+		AG_ADC(AG_Param* _param) { param = _param; }
 		void comenzar();
 		void procesa(boolean refrescar);
 
@@ -47,7 +47,7 @@ class AG_ADC {
 		float valorFloat(uint16_t valorInt);
 		uint16_t maxValorADC;
 		uint16_t antValores[MAX_ENTRADAS];
-    AG_Sintetizador* sinte;
+    	AG_Param* param;
 };
 
 

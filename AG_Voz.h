@@ -23,33 +23,32 @@
 #include "AG_Oscilador.h"
 #include "AG_Filtro.h"
 #include "ADSR.h"
+#include "AG_Param.h"
 
 #define MAX_OSC_VOZ 10
-#define TICS_ADSR_VOZ 4
-#define TICS_ADSR_FILTRO 32
 
 class AG_Voz
 {
 public:
     
-    AG_Voz(void);
-    void NoteOn(uint8_t nota, float vel, adsrParam pAdsrV, adsrParam pAdsrF, float fResonance, AG_Filtro::TipoFiltro tipo);
+    AG_Voz();
+    void NoteOn(uint8_t nota, float vel);
     inline void setModulacion(float _pitchMultiplier)
     {
         osc1->setModulacion(_pitchMultiplier);
         osc2->setModulacion(_pitchMultiplier);
     }
     void NoteOff(uint8_t nota);
-    float Process(uint32_t tics, float noise_signal);
+    float Process(uint32_t tics);
     float getValor() { return valor; }
     boolean estaLibre() { return !activa; }
     uint8_t getNotaMidi() { return notaMidi; }
-    inline AG_Oscilador* getOsc1() { return osc1; }
-    inline AG_Oscilador* getOsc2() { return osc2; }
     void setCentsDetuneUnison(uint8_t _centsDetuneUnison) { centsDetuneUnison = _centsDetuneUnison;}
     unsigned long getTRelease() { return tRelease; } 
     void setPortamento(uint16_t value) { portamento = value > 0; adsrPorta->setAttackRate(value); } 
     AG_Filtro *getFistro() { return fistroGral;}
+    void init(AG_Param* _param);
+    void setFM ( boolean _fm ) { fm = _fm; }
 
 private:
     float velocidad;
@@ -59,15 +58,16 @@ private:
     ADSR *adsr;
     ADSR *adsrF;
     ADSR *adsrPorta;
-    AG_Filtro *fistro;
+    AG_Filtro *fistroDinamico;
     AG_Filtro *fistroGral;
     AG_Oscilador *osc1;
     AG_Oscilador *osc2;
     uint8_t centsDetuneUnison;
     float valor;
-    float antValorOsc2;
     unsigned long tRelease;
     boolean portamento;
+    boolean fm;
+    AG_Param* param;
 };
 
 #endif

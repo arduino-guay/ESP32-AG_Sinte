@@ -37,6 +37,11 @@ void AG_Filtro::Reset()
 {
     w[0] = 0.0f;
     w[1] = 0.0f;
+    aNorm[0] = 0.0f;
+    aNorm[1] = 0.0f;
+    bNorm[0] = 1.0f;
+    bNorm[1] = 0.0f;
+    bNorm[2] = 0.0f;
 }
 
 void IRAM_ATTR AG_Filtro::CalculateCoeff()

@@ -104,6 +104,14 @@ void ADSR::setAll(float aRate, float dRate, float sLevel, float rRate)
     setReleaseRate(rRate);
 }
 
+void ADSR::setAll(adsrParam* param)
+{
+    setAttackRate(param->a);
+    setDecayRate(param->d);
+    setSustainLevel(param->s);
+    setReleaseRate(param->r);
+}
+
 void ADSR::setTargetRatioA(float targetRatio) {
     if (targetRatio < 0.000001)
         targetRatio = 0.000001; 

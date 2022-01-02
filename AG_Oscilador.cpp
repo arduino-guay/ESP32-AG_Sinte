@@ -9,7 +9,7 @@ float IRAM_ATTR AG_Oscilador::getSiguienteValor()
 
 float IRAM_ATTR AG_Oscilador::getValor()
 {
-    return valor;
+    return valor * volumen;
 }
 
 void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota)

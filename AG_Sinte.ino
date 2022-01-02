@@ -30,11 +30,13 @@ TaskHandle_t  Core0TaskHnd ;
 #include "AG_menu.h"
 #include "AG_Midi.h"
 #include "AG_Arpegiador.h"
+#include "AG_Param.h"
 
 AG_Sintetizador El_Sinte;
-AG_ADC adc = AG_ADC(&El_Sinte);
+AG_Param param = AG_Param();
+AG_ADC adc = AG_ADC(&param);
 AG_Arpegiador arpegiador = AG_Arpegiador(&El_Sinte);
-AG_Midi midi = AG_Midi(&El_Sinte, &arpegiador);
+AG_Midi midi = AG_Midi(&El_Sinte, &param, &arpegiador);
 
 void Delay_Process(float *signal_l, float *signal_r);
 
@@ -46,9 +48,9 @@ void setup()
     Serial.begin(115200);
     delay(500);
 
-    Menu_setup(&El_Sinte,&arpegiador,&midi);
+    Menu_setup(&param,&arpegiador,&midi);
     Delay_Init();
-    El_Sinte.Init();
+    El_Sinte.Init(&param);
 
     setup_i2s();
 

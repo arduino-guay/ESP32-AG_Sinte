@@ -25,6 +25,8 @@ MIDI_CREATE_INSTANCE(HardwareSerial, Serial2,    midiSerie);
 
 AG_Sintetizador* AG_Midi::sinte;
 AG_Arpegiador* AG_Midi::arp;
+AG_Param* AG_Midi::param;
+
 uint8_t AG_Midi::modo;
 
 void AG_Midi::Process()
