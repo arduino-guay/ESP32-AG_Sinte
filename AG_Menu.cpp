@@ -47,7 +47,7 @@ MENU_INPUTS(in,&encStream);
 Ucglib_ILI9341_18x240x320_HWSPI ucg(2, 5, 4);
 
 unsigned long _utime;
-int osc1, osc2, lfoWT, akwf1, akwf2 =0;
+int osc1, osc2, lfoWT, akwf1=0, akwf2 =1;
 float cicloPulso = 0.25;
 uint8_t saltosSeno = 3;
 uint8_t tipoFiltroGlobal = 0;
@@ -109,22 +109,33 @@ SELECT(osc2,menuOsc2,"Osc2",doNothing,noEvent,noStyle
 );
 
 SELECT(akwf1,menuAkwf1,"AKWF1",doNothing,noEvent,noStyle
-  ,VALUE("Guitarra-1",0,doNothing,noEvent)
-  ,VALUE("Guitarra-2",1,doNothing,noEvent)
-  ,VALUE("Sax-1",2,doNothing,noEvent)
-  ,VALUE("Sax-2",3,doNothing,noEvent)
-  ,VALUE("Violin-1",4,doNothing,noEvent)
-  ,VALUE("Violin-2",5,doNothing,noEvent)
-  
+  ,VALUE("Piano-1",0,doNothing,noEvent)
+  ,VALUE("Piano-2",1,doNothing,noEvent)
+  ,VALUE("Guitarra-1",2,doNothing,noEvent)
+  ,VALUE("Guitarra-2",3,doNothing,noEvent)
+  ,VALUE("Sax-1",4,doNothing,noEvent)
+  ,VALUE("Sax-2",5,doNothing,noEvent)
+  ,VALUE("Violin-1",6,doNothing,noEvent)
+  ,VALUE("Violin-2",7,doNothing,noEvent)
+  ,VALUE("Oboe-1",8,doNothing,noEvent)
+  ,VALUE("Oboe-2",9,doNothing,noEvent)
+  ,VALUE("Theremin-1",10,doNothing,noEvent)
+  ,VALUE("Theremin-2",11,doNothing,noEvent)
 );
 
 SELECT(akwf2,menuAkwf2,"AKWF2",doNothing,noEvent,noStyle
-  ,VALUE("Guitarra-1",0,doNothing,noEvent)
-  ,VALUE("Guitarra-2",1,doNothing,noEvent)
-  ,VALUE("Sax-1",2,doNothing,noEvent)
-  ,VALUE("Sax-2",3,doNothing,noEvent)
-  ,VALUE("Violin-1",4,doNothing,noEvent)
-  ,VALUE("Violin-2",5,doNothing,noEvent)
+  ,VALUE("Piano-1",0,doNothing,noEvent)
+  ,VALUE("Piano-2",1,doNothing,noEvent)
+  ,VALUE("Guitarra-1",2,doNothing,noEvent)
+  ,VALUE("Guitarra-2",3,doNothing,noEvent)
+  ,VALUE("Sax-1",4,doNothing,noEvent)
+  ,VALUE("Sax-2",5,doNothing,noEvent)
+  ,VALUE("Violin-1",6,doNothing,noEvent)
+  ,VALUE("Violin-2",7,doNothing,noEvent)
+  ,VALUE("Oboe-1",8,doNothing,noEvent)
+  ,VALUE("Oboe-2",9,doNothing,noEvent)
+  ,VALUE("Theremin-1",10,doNothing,noEvent)
+  ,VALUE("Theremin-2",11,doNothing,noEvent)
 );
 
 SELECT(lfoWT,menuLfoWT,"Onda",doNothing,noEvent,noStyle

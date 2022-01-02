@@ -27,13 +27,19 @@ static float _lfr[WAVEFORM_CNT];
 static float _akwf1[WAVEFORM_CNT];
 static float _akwf2[WAVEFORM_CNT];
 
-const int16_t* AKWF_samples[6]  = {
+const int16_t* AKWF_samples[12]  = {
+    AKWF_piano_0009,
+    AKWF_piano_0015,
     AKWF_aguitar_0001,
     AKWF_aguitar_0020,
     AKWF_altosax_0017,
     AKWF_altosax_0018,
     AKWF_violin_0001,
-    AKWF_violin_0007
+    AKWF_violin_0007,
+    AKWF_oboe_0002,
+    AKWF_oboe_0006,
+    AKWF_theremin_0002,
+    AKWF_theremin_0008
 };
 
 
