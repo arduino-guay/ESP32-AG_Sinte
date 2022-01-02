@@ -45,6 +45,12 @@ void AG_Voz::init(AG_Param* _param)
     osc2->setWfOsc(param->getWaveFormOsc2());
 }
 
+void AG_Voz::setPortamento(uint16_t value)
+ { 
+     portamento = value > 0; 
+     adsrPorta->setAttackRate(value); 
+} 
+
 float IRAM_ATTR AG_Voz::Process(uint32_t tics)
 {   
     if ( fm )
@@ -61,8 +67,8 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics)
     {
         if ( portamento ) {
           adsrPorta->process();
-          osc1->setFrecuencia(anteriorNota, notaMidi, adsrPorta->getValue());
-          osc2->setFrecuencia(anteriorNota, notaMidi, adsrPorta->getValue());
+          osc1->setFrecuencia(notaAnterior, notaActual, adsrPorta->getValue());
+          osc2->setFrecuencia(notaAnterior, notaActual, adsrPorta->getValue());
         }
         
         adsr->process();
@@ -90,7 +96,7 @@ float IRAM_ATTR AG_Voz::Process(uint32_t tics)
 
 void AG_Voz::NoteOff(uint8_t nota)
 {
-    if (activa && notaMidi == nota)
+    if (activa && notaActual == nota)
     {
         adsr->gate(false);
         adsrF->gate(false);
@@ -98,10 +104,10 @@ void AG_Voz::NoteOff(uint8_t nota)
     }
 }
 
-void AG_Voz::NoteOn(uint8_t nota, float vel)
+void AG_Voz::NoteOn(uint8_t notAnt, uint8_t notAct, float vel)
 {
-    anteriorNota = notaMidi;
-    notaMidi = nota;
+    notaAnterior = notAnt;
+    notaActual = notAct;
     velocidad = vel;
     valor = 0;
     
@@ -114,14 +120,15 @@ void AG_Voz::NoteOn(uint8_t nota, float vel)
     fistroGral->setResonance(param->getRresoGen());
     fistroGral->setTipo(param->getTipoFiltroGen());
 
+    setPortamento(param->getPortamento());
     if ( portamento ) 
     {
-      osc1->setNotaMidi(anteriorNota, 0, centsDetuneUnison);
-      osc2->setNotaMidi(anteriorNota, 0, centsDetuneUnison);
+      osc1->setNotaMidi(notaAnterior, 0, centsDetuneUnison);
+      osc2->setNotaMidi(notaAnterior, 0, centsDetuneUnison);
     } else 
     {
-      osc1->setNotaMidi(nota, 0, centsDetuneUnison);
-      osc2->setNotaMidi(nota, 0, centsDetuneUnison);
+      osc1->setNotaMidi(notaActual, 0, centsDetuneUnison);
+      osc2->setNotaMidi(notaActual, 0, centsDetuneUnison);
     }
     adsr->setAll(param->getADSRVolumen());
     adsr->reset();
@@ -133,12 +140,12 @@ void AG_Voz::NoteOn(uint8_t nota, float vel)
 
     fistroDinamico->Reset();
     fistroDinamico->setResonance(param->getResoFiltVoz());
-    fistroDinamico->setNotaMidi(nota);
+    fistroDinamico->setNotaMidi(notaActual);
     fistroDinamico->setCutOff(0);
     fistroDinamico->setTipo(param->getTipoFiltroVoz());    
 
     fistroGral->Reset();
-    fistroGral->setNotaMidi(nota);
+    fistroGral->setNotaMidi(notaActual);
     fistroGral->CalculateCoeff();
 
     adsr->gate(true);

@@ -32,7 +32,7 @@ class AG_Voz
 public:
     
     AG_Voz();
-    void NoteOn(uint8_t nota, float vel);
+    void NoteOn(uint8_t notAnt, uint8_t notAct, float vel);
     inline void setModulacion(float _pitchMultiplier)
     {
         osc1->setModulacion(_pitchMultiplier);
@@ -42,18 +42,17 @@ public:
     float Process(uint32_t tics);
     float getValor() { return valor; }
     boolean estaLibre() { return !activa; }
-    uint8_t getNotaMidi() { return notaMidi; }
     void setCentsDetuneUnison(uint8_t _centsDetuneUnison) { centsDetuneUnison = _centsDetuneUnison;}
     unsigned long getTRelease() { return tRelease; } 
-    void setPortamento(uint16_t value) { portamento = value > 0; adsrPorta->setAttackRate(value); } 
+    void setPortamento(uint16_t value);
     AG_Filtro *getFistro() { return fistroGral;}
     void init(AG_Param* _param);
     void setFM ( boolean _fm ) { fm = _fm; }
 
 private:
     float velocidad;
-    uint8_t notaMidi;
-    uint8_t anteriorNota;
+    uint8_t notaActual;
+    uint8_t notaAnterior;
     boolean activa;
     ADSR *adsr;
     ADSR *adsrF;

@@ -44,6 +44,8 @@ class AG_Sintetizador
         AG_Voz voces[MAX_POLY_VOICE];
         AG_Voz* getFreeVoice();
         AG_Param* param;
+        uint8_t notaActual;
+        uint8_t notaAnterior;
 };
 
 static uint32_t count = 0;

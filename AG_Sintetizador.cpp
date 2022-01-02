@@ -88,13 +88,14 @@ void AG_Sintetizador::Init(AG_Param* _param)
 
 void AG_Sintetizador::NoteOn(uint8_t ch, uint8_t note, float vel)
 {
+    notaAnterior = notaActual;
+    notaActual = note;
     lfo.reset();
     for (uint8_t y = 0; y < param->getVocesUnison() ; y++)
     {
         AG_Voz *voice = getFreeVoice();
-        voice->setPortamento(param->getPortamento());
         voice->setCentsDetuneUnison(y * param->getCentsDetune());
-        voice->NoteOn(note, vel);
+        voice->NoteOn(notaAnterior, notaActual, vel);
     }
 }
 

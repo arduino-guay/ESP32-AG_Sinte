@@ -14,6 +14,7 @@ float IRAM_ATTR AG_Oscilador::getValor()
 
 void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota)
 {
+    Serial.printf("setNotaMidi1 %d\n",nota);
     if (nota + incNota < MIDI_NOTE_CNT)
     {
         addVal = AG_Util::saltosMidi(nota + incNota);
@@ -26,8 +27,7 @@ void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota)
 
 void IRAM_ATTR AG_Oscilador::setNotaMidi(uint8_t nota, uint32_t _samplePos, uint8_t cents)
 {
-    //if (nota + incNota < MIDI_NOTE_CNT)
-    if (1)
+    if (nota + incNota < MIDI_NOTE_CNT)
     {
         addVal = AG_Util::saltosMidi(nota + incNota);
         addCents = AG_Util::incCents(nota + incNota, cents);
