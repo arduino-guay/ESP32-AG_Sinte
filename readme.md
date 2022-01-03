@@ -10,14 +10,14 @@ Algunos elementos han sido modificados/cambiados, teniendo en cuenta que el obje
 - Salida monofónica (misma señal por ambos canales)
 - Hasta 11 voces con dos osciladores cada una
 - Modo "unison" con número de voces por nota seleccionable por menú así como el "detuning" entre voces.
-- Dos osciladores con formas de onda senoidal, cuadrada, sierra, triangular, pulso, senoidal escalonada y ruido blanco
+- Dos osciladores con formas de onda senoidal, cuadrada, sierra, triangular, pulso, senoidal escalonada, ruido blanco y muestras AKWF
 - El segundo oscilador permite seleccionar volumen y variar en +/- 5 octavas su nota
-- Filtro general con Cutoff y Resonancia variables (tipo seleccionable por menú).
+- Filtro general con Keytracking, Cutoff y Resonancia variables (PASO-BAJO/PASO-ALTO seleccionable por menú).
 - ADRS de volumen y filtro con tramos exponenciales ([Nigel Redmon](http://www.earlevel.com/main/category/digital-audio/oscillators/envelope-generators/?orderby=date&order=ASC))
-- Generador de ruido blanco independiente
 - LFO con velocidad y profundidad variables y destino seleccionable mediante menú (volumen, frecuencia y cutoff del filtro general), así como la forma de onda (mismas que los osciladores, mas una señal aleatoria de baja frecuencia)
 - Recibe señales midi a través de una entrada estandar, asi como a través del puerto usb del módulo ESP32 (para esto es necesario utilizar un puente MIDI->Serial en el PC ([Hairless MIDI](https://projectgus.github.io/hairless-midiserial/)))
 - Límea de retardo configurable desde el menú
+- Arpegiador con posibilidad de modificar BPM, longitud de nota, tipo (ASC, DESC, ASC/DES, ASC/DES EX, ...), varias octavas ....
 
 
 ### Dependencias
