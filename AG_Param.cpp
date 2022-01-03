@@ -88,11 +88,6 @@ void AG_Param::setUnison(uint8_t _voces, uint8_t _centsDetuneUnison)
     centsDetuneUnison = _centsDetuneUnison;
 }
 
-void AG_Param::setPortamento(float _portamento)
-{
-    portamento = synth_Log(_portamento, 1);
-}
-
 void AG_Param::setUltimoValor(float valor, boolean forzado)
 {
     if (!forzado)
@@ -101,10 +96,17 @@ void AG_Param::setUltimoValor(float valor, boolean forzado)
     }
 }
 
+void AG_Param::setPortamento(float _portamento)
+{
+    portamento = synth_Log(_portamento, 1);
+    setUltimoValor(portamento * TICS_ADSR_VOZ / SAMPLE_RATE, false);
+}
+
 void AG_Param::setModWheel(uint8_t ch, float _wheel)
 {
     wheel = _wheel;
-    lfo->setVolumen(volLFO + wheel);
+    lfo->setVolumen(volLFO + wheel); 
+    setUltimoValor(volLFO + wheel, false);
 }
 
 void AG_Param::setParam(uint8_t slider, float value, boolean forzado)
